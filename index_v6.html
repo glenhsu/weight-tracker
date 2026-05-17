@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, height=device-height">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<title>我獨自升級 V1.0 💪</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --bg: #09090b; --card: #18181b; --card2: #27272a;
+    --accent: #22c55e; --accent2: #166534;
+    --blue: #3b82f6; --blue2: #1d4ed8;
+    --amber: #f59e0b; --amber2: #92400e;
+    --purple: #a855f7; --purple2: #581c87;
+    --text: #f4f4f5; --text2: #a1a1aa; --text3: #71717a;
+    --border: #3f3f46; --danger: #ef4444;
+    --timer-w: 300px;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); overflow:hidden; }
+  .app { display:flex; width:100vw; overflow:hidden; }
+
+  /* ===== Left Nav ===== */
+  .navbar { width:70px; min-width:70px; background:rgba(24,24,27,0.6); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); border-right:1px solid var(--border); display:flex; flex-direction:column; z-index:10; }
+  .navbar .brand { padding:12px 4px 6px; text-align:center; border-bottom:1px solid var(--border); flex-shrink:0; font-size:14px; font-weight:800; color:var(--accent); }
+  .nav-items { flex:1; display:flex; flex-direction:column; padding:6px 0; }
+  .nav-item { display:flex; flex-direction:column; align-items:center; padding:10px 4px; margin:2px 8px; border-radius:12px; cursor:pointer; transition:all 0.2s; color:var(--text3); font-size:18px; }
+  .nav-item span.nav-label { font-size:9px; font-weight:600; margin-top:3px; text-transform:uppercase; letter-spacing:0.5px; }
+  .nav-item.active { background:rgba(59,130,246,0.12); color:var(--blue); }
+  .nav-item:active { transform:scale(0.92); }
+
+  /* ===== Main Area ===== */
+  .main { flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+  .page { display:none; flex:1; flex-direction:column; overflow:hidden; min-height:0; }
+  .page.active { display:flex; }
+
+  /* ===== Template Page ===== */
+  .page-header { padding:12px 16px 8px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .page-header h2 { font-size:20px; font-weight:800; }
+  .page-header .sub { font-size:12px; color:var(--text2); margin-top:2px; }
+  .page-body { flex:1; overflow-y:auto; padding:10px 14px; -webkit-overflow-scrolling:touch; }
+  .page-body::-webkit-scrollbar { width:4px; }
+  .page-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  .tpl-grid { display:flex; flex-direction:column; gap:10px; }
+
+  .tpl-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; cursor:pointer; transition:all 0.2s; }
+  .tpl-card:active { transform:scale(0.98); }
+  .tpl-card:hover { border-color:rgba(59,130,246,0.3); }
+  .tpl-card .tpl-name { font-size:16px; font-weight:700; color:var(--text); }
+  .tpl-card .tpl-meta { font-size:11px; color:var(--text3); margin-top:4px; display:flex; gap:12px; }
+  .tpl-card .tpl-meta span { display:flex; align-items:center; gap:3px; }
+  .tpl-card .tpl-ex-preview { font-size:12px; color:var(--text2); margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+  .tpl-card .tpl-ex-preview .tag { background:var(--bg); padding:2px 8px; border-radius:6px; color:var(--blue); }
+  .tpl-card .tpl-actions { display:flex; gap:6px; margin-top:10px; }
+
+  .empty-state { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text3); gap:10px; }
+  .empty-state i { font-size:40px; opacity:0.25; }
+  .empty-state p { font-size:14px; max-width:260px; text-align:center; }
+
+  .btn-primary { background:var(--blue); border:none; color:#fff; border-radius:999px; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:inline-flex; align-items:center; gap:6px; }
+  .btn-primary:active { transform:scale(0.96); }
+  .btn-secondary { background:var(--card2); border:1px solid var(--border); border:none; color:var(--text2); border-radius:12px; padding:8px 14px; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; display:inline-flex; align-items:center; gap:5px; }
+  .btn-secondary:hover { background:var(--card2); color:var(--text); border-color:var(--text3); }
+  .btn-danger { background:rgba(239,68,68,0.12); border:none; color:var(--danger); border-radius:12px; padding:8px 14px; font-size:12px; font-weight:600; cursor:pointer; transition:all 0.15s; display:inline-flex; align-items:center; gap:5px; }
+  .btn-start { background:var(--accent); border:none; color:#fff; border-radius:12px; padding:8px 14px; font-size:12px; font-weight:700; cursor:pointer; transition:all 0.15s; display:inline-flex; align-items:center; gap:5px; }
+  .btn-start:active { transform:scale(0.96); }
+
+  /* ===== Workout (Session) Page ===== */
+  .ws-header { padding:12px 16px 8px; border-bottom:1px solid var(--border); flex-shrink:0; }
+  .ws-header .ws-title { font-size:20px; font-weight:800; }
+  .ws-header .ws-meta { font-size:12px; color:var(--text2); margin-top:4px; display:flex; gap:16px; flex-wrap:wrap; }
+  .ws-header .ws-meta i { margin-right:3px; }
+  .ws-header .ws-timer { font-size:13px; color:var(--amber); font-weight:700; font-family:monospace; }
+  .ws-body { flex:1; overflow-y:auto; padding:10px 14px; display:flex; flex-direction:column; gap:8px; -webkit-overflow-scrolling:touch; min-height:0; }
+  .ws-body::-webkit-scrollbar { width:4px; }
+  .ws-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  .ws-bottom { flex-shrink:0; padding:8px 14px 14px; display:flex; gap:6px; background:var(--bg); border-top:1px solid var(--border); }
+
+  .ex-card { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:12px 14px; }
+  .ex-card.done { border-color:rgba(34,197,94,0.3); background:rgba(34,197,94,0.03); }
+  .ex-card .ex-hdr { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+  .ex-card .ex-hdr .ex-name { font-size:15px; font-weight:700; flex:1; }
+  .ex-card .ex-hdr .ex-done-badge { font-size:10px; color:var(--accent); font-weight:700; }
+  .ex-card .ex-hdr .ex-rm-badge { font-size:11px; color:var(--purple); font-weight:700; font-family:monospace; }
+  .ex-card .ex-hdr .ex-actions { display:flex; gap:2px; }
+  .ex-card .ex-hdr .ex-actions button { background:none; border:none; cursor:pointer; font-size:13px; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+
+  .set-list { display:flex; flex-direction:column; gap:4px; margin-bottom:8px; }
+  .set-row { display:flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:6px 10px; cursor:pointer; transition:all 0.15s; }
+  .set-row:hover { border-color:var(--blue); background:rgba(59,130,246,0.05); }
+  .set-row:active { transform:scale(0.98); }
+  .set-row.done { border-color:rgba(34,197,94,0.3); background:rgba(34,197,94,0.04); }
+  .set-row .set-chk { width:22px; height:22px; border-radius:50%; border:2px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; cursor:pointer; color:transparent; font-size:12px; }
+  .set-row .set-chk.checked { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .set-row .set-num { font-size:11px; font-weight:700; color:var(--text3); min-width:20px; font-family:monospace; }
+  .set-row .set-detail { flex:1; font-size:13px; color:var(--text); font-weight:600; display:flex; align-items:center; gap:6px; }
+  .set-row .set-detail .sn { color:var(--blue); }
+  .set-row .set-detail .sw { color:var(--accent); }
+  .set-row .set-detail .set-edit-input { background:transparent; border:none; color:var(--text); font-size:13px; font-weight:700; font-family:monospace; padding:2px 4px; margin:-2px 0; border-radius:4px; width:40px; text-align:center; outline:none; transition:all 0.15s; }
+  .set-row .set-detail .set-edit-input:focus { background:var(--card2); border:1px solid var(--blue); width:50px; }
+  .set-row .set-del { background:none; border:none; color:var(--text3); font-size:11px; cursor:pointer; width:22px; height:22px; border-radius:6px; display:flex; align-items:center; justify-content:center; opacity:0.4; transition:all 0.15s; }
+  .set-row .set-del:hover { opacity:1; color:var(--danger); background:rgba(239,68,68,0.1); }
+
+  .add-set-btn { display:flex; align-items:center; justify-content:center; gap:4px; background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:5px; font-size:11px; color:var(--text3); cursor:pointer; transition:all 0.15s; }
+  .add-set-btn:hover { border-color:var(--blue); color:var(--blue); border-style:solid; }
+
+  /* ===== History Page ===== */
+  .hist-item { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:10px; position:relative; }
+  .hist-item:active { transform:scale(0.98); }
+  .hist-del-btn { position:absolute; top:8px; right:8px; width:26px; height:26px; border:none; border-radius:50%; background:rgba(255,60,60,0.15); color:#ff3c3c; font-size:13px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:2; }
+  .hist-del-btn:hover { background:rgba(255,60,60,0.3); }
+  .hist-date { font-size:14px; font-weight:700; color:var(--text); }
+  .hist-date .hist-dow { font-size:11px; font-weight:400; color:var(--text3); margin-left:6px; }
+  .hist-meta { font-size:11px; color:var(--text3); margin-top:4px; display:flex; gap:14px; flex-wrap:wrap; }
+  .hist-ex-list { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+  .hist-ex-tag { background:var(--bg); padding:3px 10px; border-radius:6px; font-size:12px; color:var(--text2); }
+  .hist-ex-tag .hrm { color:var(--purple); font-weight:600; font-family:monospace; }
+
+  /* ===== PR Leaderboard ===== */
+  .pr-list { }
+  .pr-item { display:flex; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:16px; padding:14px; margin-bottom:8px; gap:12px; }
+  .pr-item .rank { font-size:20px; font-weight:800; color:var(--text3); min-width:30px; text-align:center; }
+  .pr-item .rank.gold { color:#fbbf24; }
+  .pr-item .rank.silver { color:#94a3b8; }
+  .pr-item .rank.bronze { color:#d97706; }
+  .pr-item .pr-info { flex:1; }
+  .pr-item .pr-name { font-size:15px; font-weight:700; }
+  .pr-item .pr-detail { line-height:1.6; }
+  .pr-item .pr-detail .pr-record { font-size:15px; font-weight:700; color:var(--text); }
+  .pr-item .pr-detail .pr-record .pr-record-unit { font-size:11px; color:var(--text3); font-weight:400; }
+  .pr-item .pr-detail .pr-date { font-size:12px; color:var(--text3); }
+  .pr-item .pr-rm { font-size:22px; font-weight:800; color:var(--purple); font-family:monospace; }
+  .pr-item .pr-rm .rm-unit { font-size:12px; color:var(--text3); }
+
+  /* ===== Settings Page ===== */
+  .settings-section { background:var(--card); border:1px solid var(--border); border-radius:16px; padding:16px; margin-bottom:12px; }
+  .settings-section h4 { margin:0 0 10px; font-size:15px; color:var(--text); }
+  .settings-section label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; display:block; margin:8px 0 4px; }
+  .settings-rest-input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px 14px; color:var(--text); font-size:20px; font-weight:700; font-family:monospace; text-align:center; outline:none; }
+  .settings-rest-input:focus { border-color:var(--blue); }
+  .settings-rest-input-desc { font-size:12px; color:var(--text3); margin-top:4px; }
+  .btn-reset-data { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:var(--danger); border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; }
+  .btn-reset-data:active { transform:scale(0.96); }
+
+  /* ===== Modals ===== */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:90; justify-content:center; align-items:center; }
+  .modal-overlay.show { display:flex; }
+  .modal-box { background:var(--card); border:1px solid var(--border); border-radius:24px; padding:24px; width:420px; max-width:90vw; max-height:80vh; overflow-y:auto; }
+  .modal-box h3 { font-size:18px; font-weight:700; margin-bottom:16px; }
+  .modal-box label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; display:block; margin-top:12px; margin-bottom:4px; }
+  .modal-box input, .modal-box textarea { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:10px 12px; color:var(--text); font-size:14px; outline:none; }
+  .modal-box input:focus, .modal-box textarea:focus { border-color:var(--blue); }
+  .modal-box textarea { resize:vertical; min-height:60px; font-family:inherit; }
+  .modal-box .modal-actions { display:flex; gap:8px; margin-top:20px; }
+  .modal-box .modal-actions button { flex:1; border:none; border-radius:12px; padding:12px; font-weight:600; font-size:14px; cursor:pointer; }
+  .modal-box .modal-actions .btn-save { background:var(--blue); color:#fff; }
+  .modal-box .modal-actions .btn-cancel { background:var(--card2); color:var(--text2); }
+
+  /* ===== Template Exercise Row ===== */
+  .tpl-ex-row { display:flex; align-items:center; gap:6px; background:var(--bg); border:1px solid var(--border); border-radius:10px; padding:6px 8px; margin-bottom:6px; }
+  .tpl-ex-row .ex-fields { flex:1; display:flex; gap:6px; min-width:0; }
+  .tpl-ex-row .ex-fields input { width:0; flex:1; min-width:0; background:transparent; border:none; padding:6px 4px; color:var(--text); font-size:13px; outline:none; font-weight:600; }
+  .tpl-ex-row .ex-fields input::placeholder { color:var(--text3); font-weight:400; }
+  .tpl-ex-row .ex-fields input.num-input { text-align:center; max-width:70px; font-family:monospace; font-weight:700; font-size:13px; }
+  .tpl-ex-row .ex-del { background:none; border:none; color:var(--text3); cursor:pointer; font-size:14px; width:30px; height:30px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.15s; }
+  .tpl-ex-row .ex-del:hover { color:var(--danger); background:rgba(239,68,68,0.1); }
+  .tpl-ex-add { display:flex; align-items:center; justify-content:center; gap:4px; background:var(--bg); border:1px dashed var(--border); border-radius:10px; padding:8px; font-size:12px; color:var(--text3); cursor:pointer; transition:all 0.15s; margin-top:2px; }
+  .tpl-ex-add:hover { border-color:var(--blue); color:var(--blue); border-style:solid; }
+
+  .set-edit-inputs { display:flex; gap:8px; margin-top:4px; }
+  .set-edit-inputs div { flex:1; }
+  .set-edit-inputs label { text-align:center; }
+  .set-edit-inputs input { text-align:center; font-size:18px; font-weight:700; padding:12px; }
+
+  /* ===== Stats ===== */
+  .stat-row { display:flex; gap:10px; margin-bottom:10px; }
+  .stat-card { flex:1; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px; text-align:center; }
+  .stat-card .stat-val { font-size:22px; font-weight:800; color:var(--text); font-family:monospace; }
+  .stat-card .stat-label { font-size:10px; color:var(--text3); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+  .stat-card .stat-val.green { color:var(--accent); }
+
+  /* ===== Toast ===== */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--card2); color:var(--text); padding:10px 20px; border-radius:12px; font-size:13px; z-index:200; box-shadow:0 4px 24px rgba(0,0,0,0.5); display:none; white-space:nowrap; }
+  .toast.show { display:block; animation:fadeUp 0.3s ease; }
+  @keyframes fadeUp { from{opacity:0;transform:translateX(-50%) translateY(12px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+  @media (max-width:680px) {
+    .navbar{width:60px;min-width:60px}
+    .page-body{padding:8px 10px}
+    .ex-card{padding:10px 12px}
+    .modal-box{width:95vw;padding:18px}
+    .tpl-ex-row .ex-fields{flex-wrap:wrap;gap:4px}
+    .tpl-ex-row .ex-fields input.num-input{max-width:55px}
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ===== Left Navigation ===== -->
+  <div class="navbar">
+    <div class="brand">💪</div>
+    <div class="nav-items">
+      <div class="nav-item active" data-page="templates"><i class="fas fa-dumbbell"></i><span class="nav-label">範本</span></div>
+      <div class="nav-item" data-page="workout"><i class="fas fa-play-circle"></i><span class="nav-label">訓練</span></div>
+      <div class="nav-item" data-page="history"><i class="fas fa-history"></i><span class="nav-label">紀錄</span></div>
+      <div class="nav-item" data-page="leaderboard"><i class="fas fa-trophy"></i><span class="nav-label">排行</span></div>
+      <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span class="nav-label">設定</span></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- ===== Templates Page ===== -->
+    <div class="page active" id="pageTemplates">
+      <div class="page-header">
+        <h2>📋 訓練範本</h2>
+        <div class="sub">點範本可編輯，或按開始訓練</div>
+      </div>
+      <div class="page-body" id="tplList"></div>
+    </div>
+
+    <!-- ===== Workout (Session) Page ===== -->
+    <div class="page" id="pageWorkout">
+      <div class="ws-header">
+        <div class="ws-title" id="wsTitle">🏋️ 訓練中</div>
+        <div class="ws-meta">
+          <span id="wsDate"></span>
+          <span id="wsTimer"><i class="fas fa-clock"></i> <span id="wsElapsed">00:00</span></span>
+        </div>
+      </div>
+      <div class="ws-bottom" style="padding:6px 14px 10px;border-bottom:1px solid var(--border);border-top:none;">
+        <button class="btn-secondary" id="wsRest" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-stopwatch"></i> 休息</button>
+        <button class="btn-danger" id="wsCancel" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-times"></i> 取消</button>
+        <button class="btn-primary" id="wsFinish" style="flex:1;padding:12px;font-size:14px;font-weight:800;border-radius:12px;"><i class="fas fa-check-circle"></i> 完成</button>
+      </div>
+      <div class="ws-body" id="wsBody"></div>
+    </div>
+
+    <!-- ===== History Page ===== -->
+    <div class="page" id="pageHistory">
+      <div class="page-header">
+        <h2>📜 訓練紀錄</h2>
+        <div class="sub" id="histSub">所有訓練歷史</div>
+      </div>
+      <div class="page-body" id="histList"></div>
+    </div>
+
+    <!-- ===== Leaderboard Page ===== -->
+    <div class="page" id="pageLeaderboard">
+      <div class="page-header">
+        <h2>🏆 PR 排行榜</h2>
+        <div class="sub">各項動作的最高 1RM 紀錄</div>
+      </div>
+      <div class="page-body" id="prList"></div>
+    </div>
+  </div>
+
+    <!-- ===== Settings Page ===== -->
+    <div class="page" id="pageSettings">
+      <div class="page-header">
+        <h2>⚙️ 設定</h2>
+        <div class="sub">休息計時設定</div>
+      </div>
+      <div class="page-body" id="settingsBody"></div>
+    </div>
+  </div>
+
+<!-- ===== Settings Page ===== -->
+<div class="modal-overlay" id="tplModal">
+  <div class="modal-box">
+    <h3 id="tplModalTitle">📋 新增範本</h3>
+    <label>範本名稱</label>
+    <input type="text" id="tplNameInput" placeholder="e.g. 推日、拉日、腿日">
+    <label>運動項目</label>
+    <div style="display:flex;gap:6px;font-size:11px;color:var(--text3);padding:0 8px 4px;font-weight:600;">
+      <div style="flex:1;min-width:0;">動作名</div>
+      <div style="width:70px;text-align:center;">次數</div>
+      <div style="width:70px;text-align:center;">重量</div>
+      <div style="width:30px;"></div>
+    </div>
+    <div id="tplExList"></div>
+    <div class="tpl-ex-add" id="tplExAdd"><i class="fas fa-plus"></i> 新增運動項目</div>
+    <div class="modal-actions" id="tplModalActions">
+      <button class="btn-cancel" id="tplModalCancel">取消</button>
+      <button class="btn-save" id="tplModalSave">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Rest Timer Modal ===== -->
+<div class="modal-overlay" id="restTimerModal">
+  <div class="modal-box" style="max-width:320px;text-align:center;">
+    <h3>⏱️ 休息計時</h3>
+    <div style="font-size:72px;font-weight:700;font-variant-numeric:tabular-nums;margin:16px 0;color:var(--text);" id="rtDisplay">1:30</div>
+    <div style="display:flex;gap:8px;margin-top:16px;">
+      <button class="btn-cancel" id="rtCancel" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--card2);color:var(--text2);">✕ 取消</button>
+      <button class="btn-save" id="rtStart" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:#fff;box-shadow:0 0 15px rgba(34,197,94,0.25);">▶ 開始</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Set Edit Modal ===== -->
+<div class="modal-overlay" id="editSetModal">
+  <div class="modal-box">
+    <h3>✏️ 編輯組</h3>
+    <div class="set-edit-inputs">
+      <div><label>次數</label><input type="number" id="editSetReps" min="0" value="10"></div>
+      <div><label>重量 (kg)</label><input type="number" id="editSetWeight" step="0.5" min="0" value="60"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="editSetCancel">取消</button>
+      <button class="btn-save" id="editSetSave">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Delete Confirm Modal ===== -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal-box">
+    <h3 id="confirmTitle">⚠️ 確認</h3>
+    <p id="confirmMsg" style="font-size:14px;color:var(--text2);margin-bottom:16px;"></p>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="confirmCancel">取消</button>
+      <button class="btn-save" id="confirmOk" style="background:var(--danger);">確認刪除</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+'use strict';
+
+const DB_NAME = 'gym_v5';
+
+/* ===================================================================
+   Database Layer
+   =================================================================== */
+
+var DB = {
+  _store: null,
+  _autoId: {},
+
+  init: function() {
+    this._store = {};
+    try {
+      var raw = localStorage.getItem('gym_v5_db');
+      if (raw) this._store = JSON.parse(raw);
+    } catch(e) {}
+    ['templates','workouts','pr_records'].forEach(function(t) {
+      if (!DB._store[t]) DB._store[t] = [];
+    });
+    try {
+      var ai = localStorage.getItem('gym_v5_autoId');
+      if (ai) DB._autoId = JSON.parse(ai);
+    } catch(e) {}
+    ['templates','workouts'].forEach(function(t) {
+      if (!DB._autoId[t]) DB._autoId[t] = 1;
+    });
+    this._save();
+  },
+
+  _save: function() {
+    try {
+      localStorage.setItem('gym_v5_db', JSON.stringify(this._store));
+      localStorage.setItem('gym_v5_autoId', JSON.stringify(this._autoId));
+    } catch(e) {
+      console.warn('localStorage full, data may be lost');
+    }
+  },
+
+  _nextId: function(table) {
+    var id = this._autoId[table]++;
+    this._save();
+    return id;
+  },
+
+  all: function(table) {
+    return this._store[table] || [];
+  },
+
+  get: function(table, key) {
+    var list = this._store[table] || [];
+    return list.find(function(i) { return i.id === key; }) || null;
+  },
+
+  put: function(table, data) {
+    var list = this._store[table] || [];
+    if (data.id === undefined || data.id === null) {
+      data.id = this._nextId(table);
+      list.push(data);
+    } else {
+      var idx = list.findIndex(function(i) { return i.id === data.id; });
+      if (idx >= 0) list[idx] = data;
+      else list.push(data);
+    }
+    this._store[table] = list;
+    this._save();
+    return data.id;
+  },
+
+  remove: function(table, key) {
+    var list = this._store[table] || [];
+    this._store[table] = list.filter(function(i) { return i.id !== key; });
+    this._save();
+  }
+};
+
+function calc1RM(reps, weight) {
+  reps = parseInt(reps) || 0; weight = parseFloat(weight) || 0;
+  if (reps <= 0 || weight <= 0) return 0;
+  return Math.round(weight * (1 + reps / 30) * 10) / 10;
+}
+
+function calcVol(sets) {
+  if (!sets) return 0;
+  return sets.reduce(function(a, s) {
+    return a + (parseInt(s.reps) || 0) * (parseFloat(s.weight) || 0);
+  }, 0);
+}
+
+/* ===================================================================
+   PR Leaderboard
+   =================================================================== */
+async function updatePR(exerciseName, reps, weight) {
+  var rm = calc1RM(reps, weight);
+  if (rm <= 0) return;
+  var cur = DB.get('pr_records', exerciseName);
+  if (!cur || rm > cur.rm) {
+    DB.put('pr_records', {
+      id: exerciseName,
+      rm: rm,
+      reps: parseInt(reps),
+      weight: parseFloat(weight),
+      date: new Date().toISOString().slice(0, 10)
+    });
+    return true;
+  }
+  return false;
+}
+
+async function renderPR() {
+  var records = DB.all('pr_records');
+  var list = document.getElementById('prList');
+  if (!records || records.length === 0) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-trophy"></i><p>還沒有 PR 紀錄<br>開始訓練並完成組數後，最高 RM 會自動記錄在這裡 🏆</p></div>';
+    return;
+  }
+  records.sort(function(a, b) { return b.rm - a.rm; });
+  var h = '';
+  records.forEach(function(r, i) {
+    var rk = '';
+    if (i === 0) rk = 'gold';
+    else if (i === 1) rk = 'silver';
+    else if (i === 2) rk = 'bronze';
+    h += '<div class="pr-item">';
+    h += '<div class="rank ' + rk + '">#' + (i + 1) + '</div>';
+    h += '<div class="pr-info"><div class="pr-name">' + esc(r.id) + '</div>';
+    h += '<div class="pr-detail"><div class="pr-record">' + r.weight + '<span class="pr-record-unit">kg</span></div><div class="pr-date">' + r.date + '</div></div></div>';
+    h += '<div class="pr-rm">' + r.rm + ' <span class="rm-unit">kg</span></div>';
+    h += '</div>';
+  });
+  list.innerHTML = h;
+}
+
+function recalcPR() {
+  var workouts = DB.all('workouts');
+  var prMap = {};
+  workouts.forEach(function(w) {
+    (w.exercises || []).forEach(function(ex) {
+      (ex.sets || []).forEach(function(s) {
+        if (s.done && s.reps > 0 && s.weight > 0) {
+          var rm = calc1RM(s.reps, s.weight);
+          if (rm > 0 && (!prMap[ex.name] || rm > prMap[ex.name].rm)) {
+            prMap[ex.name] = { rm: rm, reps: s.reps, weight: s.weight, date: w.date };
+          }
+        }
+      });
+    });
+  });
+  // 重寫 pr_records
+  DB._store.pr_records = Object.keys(prMap).map(function(k) {
+    return { id: k, rm: prMap[k].rm, reps: prMap[k].reps, weight: prMap[k].weight, date: prMap[k].date };
+  });
+  DB._save();
+  if (document.getElementById('pageLeaderboard').classList.contains('active')) {
+    renderPR();
+  }
+}
+
+function renderSettings() {
+  var body = document.getElementById('settingsBody');
+  var curSec = parseInt(localStorage.getItem('wt_restSeconds')) || 90;
+  var h = '<div style="text-align:center;padding:20px 0 10px;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:1px;">我獨自升級 V1.0</div>';
+  h += '<div class="settings-section">';
+  h += '<h4>⏱️ 休息倒數秒數</h4>';
+  h += '<input type="number" class="settings-rest-input" id="restSecInput" value="' + curSec + '" min="5" step="5" autocomplete="off">';
+  h += '<div class="settings-rest-input-desc">輸入休息秒數（至少 5 秒）</div>';
+  h += '</div>';
+  h += '<div class="settings-section">';
+  h += '<h4>⚠️ 危險區域</h4>';
+  h += '<button class="btn-reset-data" id="resetDataBtn"><i class="fas fa-trash-alt"></i> 重設所有資料</button>';
+  h += '<div class="settings-rest-input-desc" style="margin-top:6px;">刪除所有範本、訓練紀錄、PR 排行榜資料，無法復原。</div>';
+  h += '</div>';
+  body.innerHTML = h;
+}
+
+/* ===================================================================
+   Templates — 訓練範本 (V6: 分欄位 + 點卡片編輯 + 開始按鈕)
+   =================================================================== */
+var editingTplId = null;
+
+async function renderTemplates() {
+  var templates = DB.all('templates');
+  var list = document.getElementById('tplList');
+  if (!templates || templates.length === 0) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-dumbbell"></i><p>還沒有訓練範本<br>點擊下方按鈕建立第一個 💪</p></div>' +
+        '<div style="text-align:center;padding:20px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> 新增範本</button></div>';
+    return;
+  }
+  var h = '<div class="tpl-grid">';
+  templates.forEach(function(t) {
+    h += '<div class="tpl-card" data-tpl="' + t.id + '">';
+    h += '<div class="tpl-name">' + esc(t.name) + '</div>';
+    h += '<div class="tpl-meta"><span><i class="fas fa-dumbbell"></i>' + t.exercises.length + ' 動作</span></div>';
+    h += '<div class="tpl-ex-preview">';
+    t.exercises.forEach(function(ex) {
+      h += '<span class="tag">' + esc(ex.name) + '</span>';
+    });
+    h += '</div>';
+    h += '<div class="tpl-actions">';
+    h += '<button class="btn-start tpl-start-btn" data-tpl="' + t.id + '"><i class="fas fa-play"></i> 開始訓練</button>';
+    h += '<button class="btn-secondary tpl-edit-btn" data-tpl="' + t.id + '"><i class="fas fa-pen"></i> 編輯</button>';
+    h += '</div></div>';
+  });
+  h += '</div>';
+  h += '<div style="text-align:center;padding:16px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> 新增範本</button></div>';
+  list.innerHTML = h;
+}
+
+function showTplEditModal(tpl) {
+  var title = document.getElementById('tplModalTitle');
+  var nameInput = document.getElementById('tplNameInput');
+  var exList = document.getElementById('tplExList');
+  var actions = document.getElementById('tplModalActions');
+
+  if (tpl) {
+    editingTplId = tpl.id;
+    title.textContent = '✏️ 編輯範本';
+    nameInput.value = tpl.name;
+    renderTplExRows(tpl.exercises);
+    // show delete button
+    if (!document.getElementById('tplModalDelete')) {
+      var delBtn = document.createElement('button');
+      delBtn.id = 'tplModalDelete';
+      delBtn.className = 'btn-danger';
+      delBtn.innerHTML = '<i class="fas fa-trash"></i> 刪除範本';
+      actions.appendChild(delBtn);
+    }
+    document.getElementById('tplModalDelete').style.display = 'inline-flex';
+  } else {
+    editingTplId = null;
+    title.textContent = '📋 新增範本';
+    nameInput.value = '';
+    renderTplExRows([{ name: '', reps: 10, weight: 60 }]);
+    var delBtn = document.getElementById('tplModalDelete');
+    if (delBtn) delBtn.style.display = 'none';
+  }
+  document.getElementById('tplModal').classList.add('show');
+  setTimeout(function() { nameInput.focus(); }, 100);
+}
+
+function renderTplExRows(exercises) {
+  var container = document.getElementById('tplExList');
+  var h = '';
+  exercises.forEach(function(ex, i) {
+    h += '<div class="tpl-ex-row" data-ex-idx="' + i + '">';
+    h += '<div class="ex-fields">';
+    h += '<input type="text" class="ex-name-input" value="' + esc(ex.name) + '" placeholder="動作名">';
+    h += '<input type="number" class="num-input ex-reps-input" value="' + (ex.reps || 10) + '" min="0" placeholder="次數">';
+    h += '<input type="number" class="num-input ex-weight-input" value="' + (ex.weight || 60) + '" step="0.5" min="0" placeholder="重量">';
+    h += '</div>';
+    h += '<button class="ex-del" data-ex-idx="' + i + '"><i class="fas fa-times"></i></button>';
+    h += '</div>';
+  });
+  container.innerHTML = h;
+}
+
+function collectExFromRows() {
+  var rows = document.querySelectorAll('#tplExList .tpl-ex-row');
+  var exercises = [];
+  rows.forEach(function(row) {
+    var name = row.querySelector('.ex-name-input').value.trim();
+    var reps = parseInt(row.querySelector('.ex-reps-input').value) || 0;
+    var weight = parseFloat(row.querySelector('.ex-weight-input').value) || 0;
+    if (name) {
+      exercises.push({ name: name, reps: reps, weight: weight });
+    }
+  });
+  return exercises;
+}
+
+/* ===================================================================
+   Workout Session
+   =================================================================== */
+var currentSession = null;
+var sessionTimerInterval = null;
+
+function startSession(tpl) {
+  // 從範本建立 session，但組數由訓練中自行新增，初始只有1組
+  currentSession = {
+    templateId: tpl.id,
+    templateName: tpl.name,
+    startTime: Date.now(),
+    exercises: tpl.exercises.map(function(ex) {
+      return {
+        name: ex.name,
+        sets: [{ reps: parseInt(ex.reps) || 10, weight: parseFloat(ex.weight) || 0, done: false }]
+      };
+    })
+  };
+  switchPage('workout');
+  renderWorkout();
+  startSessionTimer();
+}
+
+function renderWorkout() {
+  if (!currentSession) {
+    document.getElementById('wsBody').innerHTML = '<div class="empty-state"><i class="fas fa-play-circle"></i><p>請先選擇一個訓練範本開始 🏋️</p></div>';
+    return;
+  }
+  document.getElementById('wsTitle').textContent = '🏋️ ' + currentSession.templateName;
+  document.getElementById('wsDate').innerHTML = '<i class="fas fa-calendar-day"></i> ' + fmtDate(new Date(currentSession.startTime));
+  updateSessionTimer();
+
+  var body = document.getElementById('wsBody');
+  var h = '';
+  var allDone = true;
+  currentSession.exercises.forEach(function(ex, i) {
+    var exDone = ex.sets.length > 0 && ex.sets.every(function(s) { return s.done; });
+    if (!exDone) allDone = false;
+    h += '<div class="ex-card' + (exDone ? ' done' : '') + '">';
+    h += '<div class="ex-hdr">';
+    h += '<div class="ex-name">' + esc(ex.name) + '</div>';
+    if (exDone) h += '<span class="ex-done-badge"><i class="fas fa-check-circle"></i></span>';
+h += '<div class="ex-actions"></div>';
+    h += '</div>';
+    h += '<div class="set-list">';
+    ex.sets.forEach(function(set, si) {
+      var done = set.done;
+      h += '<div class="set-row' + (done ? ' done' : '') + '">';
+      h += '<div class="set-chk' + (done ? ' checked' : '') + '" data-ws-chk="' + i + '-' + si + '">' + (done ? '✓' : '') + '</div>';
+      h += '<span class="set-num">#' + (si + 1) + '</span>';
+      h += '<span class="set-detail"><input class="set-edit-input sn" value="' + set.reps + '" data-ws-set-reps="' + i + '-' + si + '"> × <input class="set-edit-input sw" value="' + set.weight + '" data-ws-set-wt="' + i + '-' + si + '"> kg</span>';
+      h += '<button class="set-del" data-ws-del="' + i + '-' + si + '"><i class="fas fa-trash-alt"></i></button>';
+      h += '</div>';
+    });
+    h += '<div class="add-set-btn" data-ws-add="' + i + '"><i class="fas fa-plus"></i> 新增組</div>';
+    h += '</div></div>';
+  });
+  h += '<div class="empty-state" style="flex:none;padding:20px 0"><p>' + (allDone ? '✅ 所有動作已完成！點擊下方「完成訓練」儲存紀錄' : '點選方塊勾選完成的組 🎯') + '</p></div>';
+  body.innerHTML = h;
+}
+
+function startSessionTimer() {
+  if (sessionTimerInterval) clearInterval(sessionTimerInterval);
+  sessionTimerInterval = setInterval(updateSessionTimer, 1000);
+}
+
+function updateSessionTimer() {
+  if (!currentSession) return;
+  var elapsed = Math.floor((Date.now() - currentSession.startTime) / 1000);
+  var m = Math.floor(elapsed / 60);
+  var s = elapsed % 60;
+  document.getElementById('wsElapsed').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+}
+
+async function finishWorkout() {
+  if (!currentSession) return;
+  var totalVol = 0;
+  currentSession.exercises.forEach(function(ex) {
+    ex.sets.forEach(function(s) {
+      totalVol += (parseInt(s.reps) || 0) * (parseFloat(s.weight) || 0);
+    });
+  });
+  var duration = Math.floor((Date.now() - currentSession.startTime) / 1000);
+  var entry = {
+    date: new Date().toISOString(),
+    templateName: currentSession.templateName,
+    templateId: currentSession.templateId,
+    exercises: currentSession.exercises.map(function(ex) {
+      return { name: ex.name, sets: ex.sets.map(function(s) { return { reps: s.reps, weight: s.weight, done: s.done }; }) };
+    }),
+    totalVolume: totalVol,
+    duration: duration,
+    completedSets: currentSession.exercises.reduce(function(a, ex) { return a + ex.sets.filter(function(s) { return s.done; }).length; }, 0)
+  };
+  DB.put('workouts', entry);
+
+  var prCount = 0;
+  for (var ei = 0; ei < currentSession.exercises.length; ei++) {
+    var ex = currentSession.exercises[ei];
+    for (var si = 0; si < ex.sets.length; si++) {
+      var set = ex.sets[si];
+      if (set.done) {
+        var isPR = await updatePR(ex.name, set.reps, set.weight);
+        if (isPR) prCount++;
+      }
+    }
+  }
+
+  stopSession();
+  switchPage('history');
+  renderHistory();
+  var msg = '✅ 訓練已完成！' + (prCount > 0 ? ' 🏆 新增 ' + prCount + ' 項 PR！' : '');
+  showToast(msg);
+}
+
+function stopSession() {
+  if (sessionTimerInterval) { clearInterval(sessionTimerInterval); sessionTimerInterval = null; }
+  restTimerClose();
+  currentSession = null;
+  renderWorkout();
+}
+
+function cancelWorkout() {
+  stopSession();
+  switchPage('templates');
+  renderTemplates();
+  showToast('訓練已放棄');
+}
+
+/* ===================================================================
+   Rest Timer Modal
+   =================================================================== */
+var restTimer = { sec: 0, total: 0, run: false, iv: null };
+
+function showRestTimer() {
+  var sec = parseInt(localStorage.getItem('wt_restSeconds')) || 90;
+  restTimer.sec = sec;
+  restTimer.total = sec;
+  restTimer.run = false;
+  if (restTimer.iv) { clearInterval(restTimer.iv); restTimer.iv = null; }
+  document.getElementById('rtDisplay').textContent = Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0');
+  document.getElementById('rtStart').textContent = '▶ 開始';
+  document.getElementById('rtStart').style.background = 'var(--accent)';
+  document.getElementById('restTimerModal').classList.add('show');
+}
+
+/* 提示音 */
+function playBeep() {
+  try {
+    var actx = new (window.AudioContext || window.webkitAudioContext)();
+    var osc = actx.createOscillator();
+    osc.type = 'square';
+    osc.frequency.value = 880;
+    var gain = actx.createGain();
+    gain.gain.value = 0.3;
+    osc.connect(gain);
+    gain.connect(actx.destination);
+    osc.start();
+    osc.stop(actx.currentTime + 0.2);
+  } catch(_) {}
+}
+
+function restTimerStart() {
+  if (restTimer.run) { restTimerStop(); return; }
+  if (restTimer.sec <= 0) { restTimer.sec = restTimer.total; }
+  restTimer.run = true;
+  document.getElementById('rtStart').textContent = '⏸ 暫停';
+  document.getElementById('rtStart').style.background = 'var(--blue)';
+  restTimer.iv = setInterval(function() {
+    restTimer.sec--;
+    var m = Math.floor(restTimer.sec / 60);
+    var s = restTimer.sec % 60;
+    document.getElementById('rtDisplay').textContent = m + ':' + String(s).padStart(2, '0');
+    // 最後 3 秒每秒逼一聲
+    if (restTimer.sec > 0 && restTimer.sec <= 3) { playBeep(); }
+    if (restTimer.sec <= 0) {
+      clearInterval(restTimer.iv); restTimer.iv = null; restTimer.run = false;
+      document.getElementById('rtDisplay').textContent = '⏰ Time!';
+      document.getElementById('rtStart').textContent = '✕ 關閉';
+      document.getElementById('rtStart').style.background = 'var(--accent)';
+    }
+  }, 1000);
+}
+
+function restTimerStop() {
+  if (restTimer.iv) { clearInterval(restTimer.iv); restTimer.iv = null; }
+  restTimer.run = false;
+}
+
+function restTimerClose() {
+  restTimerStop();
+  document.getElementById('restTimerModal').classList.remove('show');
+}
+
+/* ===================================================================
+   History
+   =================================================================== */
+async function renderHistory() {
+  var workouts = DB.all('workouts');
+  var list = document.getElementById('histList');
+  document.getElementById('histSub').textContent = workouts.length + ' 筆訓練記錄';
+  if (!workouts || workouts.length === 0) {
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>還沒有訓練記錄<br>完成訓練後就會出現在這裡 📜</p></div>';
+    return;
+  }
+  workouts.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
+  var h = '<div class="stat-row">';
+  h += '<div class="stat-card"><div class="stat-val green">' + workouts.length + '</div><div class="stat-label">訓練次數</div></div>';
+  var totalV = workouts.reduce(function(a, w) { return a + (w.totalVolume || 0); }, 0);
+  h += '<div class="stat-card"><div class="stat-val">' + totalV.toLocaleString() + '</div><div class="stat-label">總訓練量 (kg)</div></div>';
+  var totalSets = workouts.reduce(function(a, w) { return a + (w.completedSets || 0); }, 0);
+  h += '<div class="stat-card"><div class="stat-val">' + totalSets + '</div><div class="stat-label">完成組數</div></div>';
+  h += '</div>';
+
+  workouts.forEach(function(w) {
+    var d = new Date(w.date);
+    var dow = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    var dur = '';
+    if (w.duration) {
+      var m = Math.floor(w.duration / 60);
+      var s = w.duration % 60;
+      dur = m + 'm' + s + 's';
+    }
+    h += '<div class="hist-item" data-wsid="' + w.id + '">';
+    h += '<button class="hist-del-btn" data-ws-del-hist="' + w.id + '"><i class="fas fa-times"></i></button>';
+    h += '<div class="hist-date">' + fmtDate(d) + ' <span class="hist-dow">' + dow + '</span></div>';
+    h += '<div class="hist-meta">';
+    h += '<span><i class="fas fa-tag"></i> ' + esc(w.templateName) + '</span>';
+    h += '<span><i class="fas fa-clock"></i> ' + dur + '</span>';
+    h += '<span><i class="fas fa-weight-hanging"></i> ' + (w.totalVolume || 0).toLocaleString() + ' kg</span>';
+    h += '<span><i class="fas fa-check-circle"></i> ' + (w.completedSets || 0) + ' 組</span>';
+    h += '</div>';
+    h += '<div class="hist-ex-list">';
+    (w.exercises || []).forEach(function(ex) {
+      var exDone = ex.sets ? ex.sets.filter(function(s) { return s.done; }).length : 0;
+      var exTotal = ex.sets ? ex.sets.length : 0;
+      h += '<span class="hist-ex-tag">' + esc(ex.name) + ' <span style="color:var(--accent)">' + exDone + '/' + exTotal + '</span></span>';
+    });
+    h += '</div></div>';
+  });
+  list.innerHTML = h;
+}
+
+/* ===================================================================
+   History
+   =================================================================== */
+function switchPage(name) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('page' + name.charAt(0).toUpperCase() + name.slice(1)).classList.add('active');
+  document.querySelector('.nav-item[data-page="' + name + '"]').classList.add('active');
+}
+
+function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2000);
+}
+
+function fmtDate(d) {
+  return d.getFullYear() + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getDate()).padStart(2, '0');
+}
+
+/* ===================================================================
+   Events
+   =================================================================== */
+document.addEventListener('click', async function(e) {
+  // ====== Nav ======
+  var nav = e.target.closest('.nav-item');
+  if (nav) {
+    var page = nav.dataset.page;
+    switchPage(page);
+    if (page === 'templates') renderTemplates();
+    else if (page === 'history') renderHistory();
+    else if (page === 'leaderboard') renderPR();
+    else if (page === 'settings') renderSettings();
+    else if (page === 'workout') renderWorkout();
+    return;
+  }
+
+  // ====== Start training (green button on card) ======
+  var startBtn = e.target.closest('.tpl-start-btn');
+  if (startBtn) {
+    var tplId = parseInt(startBtn.dataset.tpl);
+    var tpl = DB.get('templates', tplId);
+    if (tpl) startSession(tpl);
+    return;
+  }
+
+  // ====== Edit template (pen button on card) ======
+  var editBtn = e.target.closest('.tpl-edit-btn');
+  if (editBtn) {
+    var tplId = parseInt(editBtn.dataset.tpl);
+    var tpl = DB.get('templates', tplId);
+    if (tpl) showTplEditModal(tpl);
+    return;
+  }
+
+  // ====== Template card click ======
+  var tplCard = e.target.closest('.tpl-card');
+  if (tplCard) {
+    // 點卡片本身打開編輯 modal（避開按鈕區域）
+    if (!e.target.closest('button')) {
+      var tplId = parseInt(tplCard.dataset.tpl);
+      var tpl = DB.get('templates', tplId);
+      if (tpl) showTplEditModal(tpl);
+    }
+    return;
+  }
+
+  // ====== New template ======
+  if (e.target.closest('#tplNewBtn')) {
+    showTplEditModal(null);
+    return;
+  }
+
+  // ====== Template modal add exercise ======
+  if (e.target.closest('#tplExAdd')) {
+    var container = document.getElementById('tplExList');
+    var idx = container.querySelectorAll('.tpl-ex-row').length;
+    var row = document.createElement('div');
+    row.className = 'tpl-ex-row';
+    row.dataset.exIdx = idx;
+    row.innerHTML = '<div class="ex-fields">' +
+      '<input type="text" class="ex-name-input" placeholder="動作名">' +
+      '<input type="number" class="num-input ex-reps-input" value="10" min="0" placeholder="次數">' +
+      '<input type="number" class="num-input ex-weight-input" value="60" step="0.5" min="0" placeholder="重量">' +
+      '</div>' +
+      '<button class="ex-del"><i class="fas fa-times"></i></button>';
+    container.appendChild(row);
+    // focus the name field
+    row.querySelector('.ex-name-input').focus();
+    return;
+  }
+
+  // ====== Template exercise delete ======
+  if (e.target.closest('#tplExList .ex-del')) {
+    var delBtn = e.target.closest('#tplExList .ex-del');
+    var row = delBtn.closest('.tpl-ex-row');
+    var container = document.getElementById('tplExList');
+    var rows = container.querySelectorAll('.tpl-ex-row');
+    if (rows.length <= 1) {
+      showToast('至少需要一個運動項目');
+      return;
+    }
+    row.remove();
+    // re-index
+    container.querySelectorAll('.tpl-ex-row').forEach(function(r, i) {
+      r.dataset.exIdx = i;
+      var d = r.querySelector('.ex-del');
+      if (d) d.dataset.exIdx = i;
+    });
+    return;
+  }
+
+  // ====== Template modal delete ======
+  if (e.target.closest('#tplModalDelete')) {
+    if (editingTplId === null) return;
+    showConfirm(
+      '🗑️ 刪除範本',
+      '確定要刪除這個範本嗎？此操作無法復原。',
+      async function() {
+        DB.remove('templates', editingTplId);
+        document.getElementById('tplModal').classList.remove('show');
+        editingTplId = null;
+        renderTemplates();
+        showToast('🗑️ 範本已刪除');
+      }
+    );
+    return;
+  }
+
+  // ====== Template modal save ======
+  if (e.target.closest('#tplModalSave')) {
+    var name = document.getElementById('tplNameInput').value.trim();
+    if (!name) { showToast('請輸入範本名稱'); return; }
+    var exercises = collectExFromRows();
+    if (exercises.length === 0) { showToast('請輸入至少一個運動項目'); return; }
+    var tpl = { name: name, exercises: exercises };
+    if (editingTplId !== null) tpl.id = editingTplId;
+    DB.put('templates', tpl);
+    document.getElementById('tplModal').classList.remove('show');
+    editingTplId = null;
+    renderTemplates();
+    showToast('✅ 已儲存範本「' + name + '」');
+    return;
+  }
+
+  // ====== Template modal cancel ======
+  if (e.target.closest('#tplModalCancel')) {
+    document.getElementById('tplModal').classList.remove('show');
+    editingTplId = null;
+    return;
+  }
+
+  // ====== Toggle set done ======
+  var chk = e.target.closest('[data-ws-chk]');
+  if (chk) {
+    var parts = chk.dataset.wsChk.split('-');
+    var exIdx = parseInt(parts[0]), setIdx = parseInt(parts[1]);
+    if (currentSession && currentSession.exercises[exIdx] && currentSession.exercises[exIdx].sets[setIdx]) {
+      var wasDone = currentSession.exercises[exIdx].sets[setIdx].done;
+      currentSession.exercises[exIdx].sets[setIdx].done = !wasDone;
+      renderWorkout();
+      // 打勾完成 → 自動開始休息倒數
+      if (!wasDone) {
+        showRestTimer();
+        restTimerStart();
+      }
+    }
+    return;
+  }
+
+  // ====== Delete set ======
+  var delSet = e.target.closest('[data-ws-del]');
+  if (delSet) {
+    var parts = delSet.dataset.wsDel.split('-');
+    var exIdx = parseInt(parts[0]), setIdx = parseInt(parts[1]);
+    if (currentSession && currentSession.exercises[exIdx] && currentSession.exercises[exIdx].sets.length > 1) {
+      currentSession.exercises[exIdx].sets.splice(setIdx, 1);
+      renderWorkout();
+    } else if (currentSession) {
+      showToast('至少需要保留一組');
+    }
+    return;
+  }
+
+  // ====== Add set ======
+  var addSet = e.target.closest('[data-ws-add]');
+  if (addSet) {
+    var exIdx = parseInt(addSet.dataset.wsAdd);
+    if (currentSession && currentSession.exercises[exIdx]) {
+      var sets = currentSession.exercises[exIdx].sets;
+      var lastSet = sets[sets.length - 1];
+      currentSession.exercises[exIdx].sets.push({
+        reps: lastSet ? lastSet.reps : 10,
+        weight: lastSet ? lastSet.weight : 60,
+        done: false
+      });
+      renderWorkout();
+    }
+    return;
+  }
+
+  // ====== Rest / Timer ======
+  if (e.target.closest('#wsRest')) {
+    if (!currentSession) return;
+    showRestTimer();
+    return;
+  }
+
+  // ====== Finish / Cancel ======
+  if (e.target.closest('#wsFinish')) { finishWorkout(); return; }
+  if (e.target.closest('#wsCancel')) { cancelWorkout(); return; }
+
+  // ====== Rest Timer Modal ======
+  if (e.target.closest('#rtCancel')) {
+    restTimerClose();
+    return;
+  }
+  if (e.target.closest('#rtStart')) {
+    if (restTimer.sec <= 0 && !restTimer.run) {
+      restTimerClose();
+      return;
+    }
+    restTimerStart();
+    return;
+  }
+  if (e.target.closest('#restTimerModal .modal-overlay')) {
+    // clicking overlay = same as cancel
+    if (!e.target.closest('.modal-box')) {
+      restTimerClose();
+      return;
+    }
+  }
+
+  // ====== Settings: rest seconds input ======
+  // Handled via input event below
+
+  // ====== History: delete record ======
+  var delHist = e.target.closest('[data-ws-del-hist]');
+  if (delHist) {
+    var wid = parseInt(delHist.dataset.wsDelHist);
+    showConfirm('🗑️ 刪除記錄', '確定要刪除此訓練記錄？', function() {
+      DB.remove('workouts', wid);
+      recalcPR();
+      renderHistory();
+      showToast('記錄已刪除');
+    });
+    return;
+  }
+
+  // ====== Settings: reset data ======
+  if (e.target.closest('#resetDataBtn')) {
+    showConfirm(
+      '⚠️ 重設所有資料',
+      '確定要刪除所有範本、訓練紀錄和 PR 排行榜資料？此操作無法復原！',
+      function() {
+        DB._store = { templates: [], workouts: [], pr_records: [] };
+        DB._autoId = { templates: 1, workouts: 1 };
+        DB._save();
+        renderTemplates();
+        renderHistory();
+        renderPR();
+        renderSettings();
+        showToast('🗑️ 所有資料已刪除');
+      }
+    );
+    return;
+  }
+
+  // ====== Confirm modal ======
+  if (e.target.closest('#confirmCancel')) {
+    document.getElementById('confirmModal').classList.remove('show');
+  }
+
+});
+
+// ====== Confirm helper ======
+function showConfirm(title, msg, onOk) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  document.getElementById('confirmModal').classList.add('show');
+  // 移除舊的 event listener
+  var okBtn = document.getElementById('confirmOk');
+  var newOk = okBtn.cloneNode(true);
+  okBtn.parentNode.replaceChild(newOk, okBtn);
+  newOk.addEventListener('click', function handler() {
+    document.getElementById('confirmModal').classList.remove('show');
+    onOk();
+  });
+}
+
+/* ===================================================================
+   Init
+   =================================================================== */
+async function init() {
+  DB.init();
+  renderTemplates();
+  renderHistory();
+  renderPR();
+
+  // ====== Settings: rest seconds input ======
+  document.addEventListener('input', function(e) {
+    var repsIn = e.target.closest('[data-ws-set-reps]');
+    if (repsIn) {
+      var parts = repsIn.dataset.wsSetReps.split('-');
+      var ei = parseInt(parts[0]), si = parseInt(parts[1]);
+      if (currentSession && currentSession.exercises[ei] && currentSession.exercises[ei].sets[si]) {
+        currentSession.exercises[ei].sets[si].reps = parseInt(repsIn.value) || 0;
+      }
+      return;
+    }
+    var wtIn = e.target.closest('[data-ws-set-wt]');
+    if (wtIn) {
+      var parts = wtIn.dataset.wsSetWt.split('-');
+      var ei = parseInt(parts[0]), si = parseInt(parts[1]);
+      if (currentSession && currentSession.exercises[ei] && currentSession.exercises[ei].sets[si]) {
+        currentSession.exercises[ei].sets[si].weight = parseFloat(wtIn.value) || 0;
+      }
+      return;
+    }
+    var restIn = e.target.closest('#restSecInput');
+    if (restIn) {
+      var val = parseInt(restIn.value) || 90;
+      if (val < 5) val = 5;
+      localStorage.setItem('wt_restSeconds', val);
+    }
+  });
+
+  // 自動隱藏網址列（滾動 1px）
+  window.scrollTo(0, 1);
+  setTimeout(function() { window.scrollTo(0, 1); }, 300);
+
+  // 強制校正真實可視高度（解決網址列一直顯示的問題）
+  function fixHeight() {
+    var h = window.innerHeight + 'px';
+    document.querySelector('.app').style.height = h;
+    document.body.style.height = h;
+  }
+  fixHeight();
+  window.addEventListener('resize', fixHeight);
+}
+
+init();
+
+})();
+</script>
+</body>
+</html>
