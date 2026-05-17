@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<title>我獨自升級 V1.0 💪</title>
+<title data-i18n="appTitle">我獨自升級 V1.0 💪</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
   :root {
@@ -206,11 +206,11 @@
   <div class="navbar">
     <div class="brand">💪</div>
     <div class="nav-items">
-      <div class="nav-item active" data-page="templates"><i class="fas fa-dumbbell"></i><span class="nav-label">範本</span></div>
-      <div class="nav-item" data-page="workout"><i class="fas fa-play-circle"></i><span class="nav-label">訓練</span></div>
-      <div class="nav-item" data-page="history"><i class="fas fa-history"></i><span class="nav-label">紀錄</span></div>
-      <div class="nav-item" data-page="leaderboard"><i class="fas fa-trophy"></i><span class="nav-label">排行</span></div>
-      <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span class="nav-label">設定</span></div>
+      <div class="nav-item active" data-page="templates"><i class="fas fa-dumbbell"></i><span class="nav-label" data-i18n="navTpl"></span></div>
+      <div class="nav-item" data-page="workout"><i class="fas fa-play-circle"></i><span class="nav-label" data-i18n="navTrain"></span></div>
+      <div class="nav-item" data-page="history"><i class="fas fa-history"></i><span class="nav-label" data-i18n="navHist"></span></div>
+      <div class="nav-item" data-page="leaderboard"><i class="fas fa-trophy"></i><span class="nav-label" data-i18n="navPR"></span></div>
+      <div class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span class="nav-label" data-i18n="navSet"></span></div>
     </div>
   </div>
 
@@ -218,8 +218,8 @@
     <!-- ===== Templates Page ===== -->
     <div class="page active" id="pageTemplates">
       <div class="page-header">
-        <h2>📋 訓練範本</h2>
-        <div class="sub">點範本可編輯，或按開始訓練</div>
+        <h2 data-i18n="pageTpl">📋 訓練範本</h2>
+        <div class="sub" data-i18n="pageTplSub">點範本可編輯，或按開始訓練</div>
       </div>
       <div class="page-body" id="tplList"></div>
     </div>
@@ -227,16 +227,16 @@
     <!-- ===== Workout (Session) Page ===== -->
     <div class="page" id="pageWorkout">
       <div class="ws-header">
-        <div class="ws-title" id="wsTitle">🏋️ 訓練中</div>
+        <div class="ws-title" data-i18n="pageTrain" id="wsTitle">🏋️ 訓練中</div>
         <div class="ws-meta">
           <span id="wsDate"></span>
           <span id="wsTimer"><i class="fas fa-clock"></i> <span id="wsElapsed">00:00</span></span>
         </div>
       </div>
       <div class="ws-bottom" style="padding:6px 14px 10px;border-bottom:1px solid var(--border);border-top:none;">
-        <button class="btn-secondary" id="wsRest" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-stopwatch"></i> 休息</button>
-        <button class="btn-danger" id="wsCancel" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-times"></i> 取消</button>
-        <button class="btn-primary" id="wsFinish" style="flex:1;padding:12px;font-size:14px;font-weight:800;border-radius:12px;"><i class="fas fa-check-circle"></i> 完成</button>
+        <button class="btn-secondary" id="wsRest" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-stopwatch"></i> <span data-i18n="wsRest">休息</span></button>
+        <button class="btn-danger" id="wsCancel" style="flex:1;padding:12px;font-size:14px;border-radius:12px;"><i class="fas fa-times"></i> <span data-i18n="wsCancel">取消</span></button>
+        <button class="btn-primary" id="wsFinish" style="flex:1;padding:12px;font-size:14px;font-weight:800;border-radius:12px;"><i class="fas fa-check-circle"></i> <span data-i18n="wsFinish">完成</span></button>
       </div>
       <div class="ws-body" id="wsBody"></div>
     </div>
@@ -244,8 +244,8 @@
     <!-- ===== History Page ===== -->
     <div class="page" id="pageHistory">
       <div class="page-header">
-        <h2>📜 訓練紀錄</h2>
-        <div class="sub" id="histSub">所有訓練歷史</div>
+        <h2 data-i18n="pageHist">📜 訓練紀錄</h2>
+        <div class="sub" id="histSub" data-i18n="pageHistSub">所有訓練歷史</div>
       </div>
       <div class="page-body" id="histList"></div>
     </div>
@@ -253,8 +253,8 @@
     <!-- ===== Leaderboard Page ===== -->
     <div class="page" id="pageLeaderboard">
       <div class="page-header">
-        <h2>🏆 PR 排行榜</h2>
-        <div class="sub">各項動作的最高 1RM 紀錄</div>
+        <h2 data-i18n="pagePR">🏆 PR 排行榜</h2>
+        <div class="sub" data-i18n="pagePRSub">各項動作的最高 1RM 紀錄</div>
       </div>
       <div class="page-body" id="prList"></div>
     </div>
@@ -263,8 +263,8 @@
     <!-- ===== Settings Page ===== -->
     <div class="page" id="pageSettings">
       <div class="page-header">
-        <h2>⚙️ 設定</h2>
-        <div class="sub">休息計時設定</div>
+        <h2 data-i18n="pageSet">⚙️ 設定</h2>
+        <div class="sub" data-i18n="pageSetSub">休息計時設定</div>
       </div>
       <div class="page-body" id="settingsBody"></div>
     </div>
@@ -273,21 +273,21 @@
 <!-- ===== Settings Page ===== -->
 <div class="modal-overlay" id="tplModal">
   <div class="modal-box">
-    <h3 id="tplModalTitle">📋 新增範本</h3>
-    <label>範本名稱</label>
-    <input type="text" id="tplNameInput" placeholder="e.g. 推日、拉日、腿日">
-    <label>運動項目</label>
+    <h3 data-i18n="tplNew" id="tplModalTitle">📋 新增範本</h3>
+    <label data-i18n="tplName">範本名稱</label>
+    <input type="text" id="tplNameInput" placeholder="" data-i18n-ph="tplNamePlaceholder">
+    <label data-i18n="tplActions">運動項目</label>
     <div style="display:flex;gap:6px;font-size:11px;color:var(--text3);padding:0 8px 4px;font-weight:600;">
-      <div style="flex:1;min-width:0;">動作名</div>
-      <div style="width:70px;text-align:center;">次數</div>
-      <div style="width:70px;text-align:center;">重量</div>
+      <div style="flex:1;min-width:0;" data-i18n="exName">動作名</div>
+      <div style="width:70px;text-align:center;" data-i18n="exReps">次數</div>
+      <div style="width:70px;text-align:center;" data-i18n="exWeight">重量</div>
       <div style="width:30px;"></div>
     </div>
     <div id="tplExList"></div>
-    <div class="tpl-ex-add" id="tplExAdd"><i class="fas fa-plus"></i> 新增運動項目</div>
+    <div class="tpl-ex-add" id="tplExAdd"><i class="fas fa-plus"></i> <span data-i18n="exAdd">新增運動項目</span></div>
     <div class="modal-actions" id="tplModalActions">
-      <button class="btn-cancel" id="tplModalCancel">取消</button>
-      <button class="btn-save" id="tplModalSave">儲存</button>
+      <button class="btn-cancel" id="tplModalCancel"><span data-i18n="tplCancel">取消</span></button>
+      <button class="btn-save" id="tplModalSave"><span data-i18n="tplSave">儲存</span></button>
     </div>
   </div>
 </div>
@@ -295,11 +295,11 @@
 <!-- ===== Rest Timer Modal ===== -->
 <div class="modal-overlay" id="restTimerModal">
   <div class="modal-box" style="max-width:320px;text-align:center;">
-    <h3>⏱️ 休息計時</h3>
+    <h3><span data-i18n="restTitle">⏱️ 休息計時</span></h3>
     <div style="font-size:72px;font-weight:700;font-variant-numeric:tabular-nums;margin:16px 0;color:var(--text);" id="rtDisplay">1:30</div>
     <div style="display:flex;gap:8px;margin-top:16px;">
-      <button class="btn-cancel" id="rtCancel" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--card2);color:var(--text2);">✕ 取消</button>
-      <button class="btn-save" id="rtStart" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:#fff;box-shadow:0 0 15px rgba(34,197,94,0.25);">▶ 開始</button>
+      <button class="btn-cancel" id="rtCancel" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--card2);color:var(--text2);">✕ <span data-i18n="cancel">取消</span></button>
+      <button class="btn-save" id="rtStart" style="flex:1;border:none;border-radius:12px;padding:14px;font-weight:700;font-size:16px;cursor:pointer;background:var(--accent);color:#fff;box-shadow:0 0 15px rgba(34,197,94,0.25);">▶ <span data-i18n="start">開始</span></button>
     </div>
   </div>
 </div>
@@ -307,14 +307,14 @@
 <!-- ===== Set Edit Modal ===== -->
 <div class="modal-overlay" id="editSetModal">
   <div class="modal-box">
-    <h3>✏️ 編輯組</h3>
+    <h3><span data-i18n="editSetTitle">✏️ 編輯組</span></h3>
     <div class="set-edit-inputs">
-      <div><label>次數</label><input type="number" id="editSetReps" min="0" value="10"></div>
-      <div><label>重量 (kg)</label><input type="number" id="editSetWeight" step="0.5" min="0" value="60"></div>
+      <div><label data-i18n="exName">次數</label><input type="number" id="editSetReps" min="0" value="10"></div>
+      <div><label data-i18n="exWeightKg">重量 (kg)</label><input type="number" id="editSetWeight" step="0.5" min="0" value="60"></div>
     </div>
     <div class="modal-actions">
-      <button class="btn-cancel" id="editSetCancel">取消</button>
-      <button class="btn-save" id="editSetSave">儲存</button>
+      <button class="btn-cancel" id="editSetCancel"><span data-i18n="cancel">取消</span></button>
+      <button class="btn-save" id="editSetSave"><span data-i18n="save">儲存</span></button>
     </div>
   </div>
 </div>
@@ -322,11 +322,11 @@
 <!-- ===== Delete Confirm Modal ===== -->
 <div class="modal-overlay" id="confirmModal">
   <div class="modal-box">
-    <h3 id="confirmTitle">⚠️ 確認</h3>
+    <h3 id="confirmTitle" data-i18n="confirmTitle">⚠️ 確認</h3>
     <p id="confirmMsg" style="font-size:14px;color:var(--text2);margin-bottom:16px;"></p>
     <div class="modal-actions">
-      <button class="btn-cancel" id="confirmCancel">取消</button>
-      <button class="btn-save" id="confirmOk" style="background:var(--danger);">確認刪除</button>
+      <button class="btn-cancel" id="confirmCancel"><span data-i18n="cancel">取消</span></button>
+      <button class="btn-save" id="confirmOk" style="background:var(--danger);" data-i18n="confirmDelete">確認刪除</button>
     </div>
   </div>
 </div>
@@ -338,6 +338,196 @@
 'use strict';
 
 const DB_NAME = 'gym_v5';
+
+/* ===================================================================
+   i18n — 多國語言支援
+   =================================================================== */
+var LANG = {
+  zh: {
+    appTitle: '我獨自升級 V1.0',
+    navTpl: '範本', navTrain: '訓練', navHist: '紀錄', navPR: '排行', navSet: '設定',
+    pageTpl: '📋 訓練範本', pageTplSub: '點範本可編輯，或按開始訓練',
+    pageTrain: '🏋️ 訓練中',
+    pageHist: '📜 訓練紀錄', pageHistSub: '所有訓練歷史',
+    pagePR: '🏆 PR 排行榜', pagePRSub: '各項動作的最高 1RM 紀錄',
+    pageSet: '⚙️ 設定', pageSetSub: '休息計時設定',
+    emptyTpl: '還沒有訓練範本<br>點擊下方按鈕建立第一個 💪',
+    emptyTplBtn: '新增範本',
+    emptyWS: '請先選擇一個訓練範本開始 🏋️',
+    emptyPR: '還沒有 PR 紀錄<br>開始訓練並完成組數後，最高 RM 會自動記錄在這裡 🏆',
+    emptyHist: '還沒有訓練記錄<br>完成訓練後就會出現在這裡 📜',
+    tplNew: '新增範本', tplEdit: '編輯範本', tplName: '範本名稱',
+    tplNamePlaceholder: 'e.g. 推日、拉日、腿日',
+    exName: '動作名', exReps: '次數', exWeight: '重量',
+    exAdd: '新增運動項目', exNeedOne: '至少需要一個運動項目',
+    tplSave: '儲存', tplCancel: '取消', tplDelete: '刪除範本',
+    tplDeleteConfirm: '確定要刪除這個範本嗎？此操作無法復原。',
+    tplDeleted: '🗑️ 範本已刪除',
+    tplSaved: '✅ 已儲存範本「{name}」',
+    tplStart: '開始訓練', tplEditBtn: '編輯',
+    tplActions: '動作',
+    tplNameRequired: '請輸入範本名稱',
+    tplExRequired: '請輸入至少一個運動項目',
+    wsRest: '休息', wsCancel: '取消', wsFinish: '完成',
+    wsAddSet: '新增組', wsKeepOne: '至少需要保留一組',
+    wsAllDone: '✅ 所有動作已完成！點擊下方「完成訓練」儲存紀錄',
+    wsInProgress: '點選方塊勾選完成的組 🎯',
+    wsDone: '✅ 訓練已完成！',
+    wsNewPR: ' 🏆 新增 {count} 項 PR！',
+    wsAborted: '訓練已放棄',
+    restTitle: '⏱️ 休息計時', restStart: '▶ 開始', restPause: '⏸ 暫停', restClose: '✕ 關閉', restCancel: '✕ 取消',
+    restTime: 'Time!',
+    histCount: '{count} 筆訓練記錄',
+    statWorkouts: '訓練次數', statVolume: '總訓練量 (kg)', statSets: '完成組數',
+    histTag: '組',
+    setRestSec: '⏱️ 休息倒數秒數',
+    setRestDesc: '輸入休息秒數（至少 5 秒）',
+    setLang: '🌐 語言 / Language',
+    setDanger: '⚠️ 危險區域',
+    setResetBtn: '重設所有資料',
+    setResetDesc: '刪除所有範本、訓練紀錄、PR 排行榜資料，無法復原。',
+    resetConfirm: '確定要刪除所有範本、訓練紀錄和 PR 排行榜資料？此操作無法復原！',
+    resetDone: '🗑️ 所有資料已刪除',
+    confirmDelete: '🗑️ 刪除記錄',
+    confirmDeleteMsg: '確定要刪除此訓練記錄？',
+    recordDeleted: '記錄已刪除',
+    editSet: '✏️ 編輯組',
+    editSetReps: '次數', editSetWeight: '重量 (kg)',
+    confirmTitle: '⚠️ 確認',
+    confirmOk: '確認刪除',
+    resetTitle: '⚠️ 重設所有資料',
+    wsCancelled: '訓練已放棄',
+    tplNoName: '請輸入範本名稱',
+    tplNeedOneEx: '請輸入至少一個運動項目',
+    histSessions: '訓練次數',
+    histVolume: '總訓練量 (kg)',
+    histSetsUnit: '組',
+    histDelete: '🗑️ 刪除記錄',
+    histDeleteConfirm: '確定要刪除此訓練記錄？',
+    histDeleted: '記錄已刪除',
+    exReps: '次數',
+    exWeight: '重量',
+    exWeightKg: '重量 (kg)',
+    navHist: '紀錄',
+    navPR: '排行',
+    navSet: '設定',
+    navTrain: '訓練',
+    editSetTitle: '✏️ 編輯組',
+    tplCancel: '取消',
+    tplName: '範本名稱',
+    wsFinish: '完成',
+    wsCancel: '取消',
+    start: '開始',
+    pageTplSub: '點範本可編輯，或按開始訓練',
+    pageHistSub: '所有訓練歷史',
+    pagePRSub: '各項動作的最高 1RM 紀錄',
+    pageSetSub: '休息計時設定',
+    save: '儲存',
+    cancel: '取消',
+    dayShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+  },
+  en: {
+    appTitle: 'Solo Level Up V1.0',
+    navTpl: 'Templates', navTrain: 'Workout', navHist: 'History', navPR: 'Leaderboard', navSet: 'Settings',
+    pageTpl: '📋 Templates', pageTplSub: 'Tap to edit, or press start',
+    pageTrain: '🏋️ Workout',
+    pageHist: '📜 History', pageHistSub: 'All workout history',
+    pagePR: '🏆 PR Leaderboard', pagePRSub: 'Best 1RM for each exercise',
+    pageSet: '⚙️ Settings', pageSetSub: 'Rest timer settings',
+    emptyTpl: 'No templates yet<br>Tap the button below to create your first 💪',
+    emptyTplBtn: 'New Template',
+    emptyWS: 'Select a template to start 🏋️',
+    emptyPR: 'No PR records yet<br>Complete sets in a workout and your best RM will appear here 🏆',
+    emptyHist: 'No workouts yet<br>Complete a workout and it will show up here 📜',
+    tplNew: 'New Template', tplEdit: 'Edit Template', tplName: 'Template Name',
+    tplNamePlaceholder: 'e.g. Push, Pull, Legs',
+    exName: 'Exercise', exReps: 'Reps', exWeight: 'Weight',
+    exAdd: 'Add Exercise', exNeedOne: 'At least one exercise is required',
+    tplSave: 'Save', tplCancel: 'Cancel', tplDelete: 'Delete Template',
+    tplDeleteConfirm: 'Delete this template? This cannot be undone.',
+    tplDeleted: '🗑️ Template deleted',
+    tplSaved: '✅ Template "{name}" saved',
+    tplStart: 'Start', tplEditBtn: 'Edit',
+    tplActions: 'exercises',
+    tplNameRequired: 'Please enter a template name',
+    tplExRequired: 'Please add at least one exercise',
+    wsRest: 'Rest', wsCancel: 'Cancel', wsFinish: 'Finish',
+    wsAddSet: 'Add Set', wsKeepOne: 'At least one set required',
+    wsAllDone: '✅ All exercises done! Click "Finish" to save',
+    wsInProgress: 'Check the box to mark a set done 🎯',
+    wsDone: '✅ Workout saved!',
+    wsNewPR: ' 🏆 {count} new PR(s)!',
+    wsAborted: 'Workout cancelled',
+    restTitle: '⏱️ Rest Timer', restStart: '▶ Start', restPause: '⏸ Pause', restClose: '✕ Close', restCancel: '✕ Cancel',
+    restTime: 'Time!',
+    histCount: '{count} workout(s)',
+    statWorkouts: 'Workouts', statVolume: 'Total Volume (kg)', statSets: 'Sets Done',
+    histTag: 'sets',
+    setRestSec: '⏱️ Rest Duration',
+    setRestDesc: 'Seconds per rest (minimum 5)',
+    setLang: '🌐 語言 / Language',
+    setDanger: '⚠️ Danger Zone',
+    setResetBtn: 'Reset All Data',
+    setResetDesc: 'Delete all templates, workouts, and PR records. Cannot be undone.',
+    resetConfirm: 'Delete all templates, workouts, and PR records? This cannot be undone!',
+    resetDone: '🗑️ All data deleted',
+    confirmDelete: '🗑️ Delete Record',
+    confirmDeleteMsg: 'Delete this workout record?',
+    recordDeleted: 'Record deleted',
+    editSet: '✏️ Edit Set',
+    editSetReps: 'Reps', editSetWeight: 'Weight (kg)',
+    confirmTitle: '⚠️ Confirm',
+    confirmOk: 'Delete',
+    resetTitle: '⚠️ Reset All Data',
+    wsCancelled: 'Workout cancelled',
+    tplNoName: 'Please enter a template name',
+    tplNeedOneEx: 'Please add at least one exercise',
+    histSessions: 'Workouts',
+    histVolume: 'Total Volume (kg)',
+    histSetsUnit: 'sets',
+    histDelete: '🗑️ Delete Record',
+    histDeleteConfirm: 'Delete this workout record?',
+    histDeleted: 'Record deleted',
+    exReps: 'Reps',
+    exWeight: 'Weight',
+    exWeightKg: 'Weight (kg)',
+    navHist: 'History',
+    navPR: 'LB',
+    navSet: 'Settings',
+    navTrain: 'Workout',
+    editSetTitle: '✏️ Edit Set',
+    tplCancel: 'Cancel',
+    tplName: 'Template Name',
+    wsFinish: 'Finish',
+    wsCancel: 'Cancel',
+    start: 'Start',
+    pageTplSub: 'Tap to edit, or press start',
+    pageHistSub: 'All workout history',
+    pagePRSub: 'Best 1RM for each exercise',
+    pageSetSub: 'Rest timer settings',
+    save: 'Save',
+    cancel: 'Cancel',
+    dayShort: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+  }
+};
+
+function t(key, vars) {
+  var lang = localStorage.getItem('wt_lang') || 'zh';
+  var msg = LANG[lang] && LANG[lang][key] ? LANG[lang][key] : (LANG.zh[key] || key);
+  if (vars) {
+    Object.keys(vars).forEach(function(k) {
+      msg = msg.replace('{' + k + '}', vars[k]);
+    });
+  }
+  return msg;
+}
+
+function applyI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.getAttribute('data-i18n');
+    el.textContent = t(key);
+  });
+}
 
 /* ===================================================================
    Database Layer
@@ -497,16 +687,23 @@ function recalcPR() {
 function renderSettings() {
   var body = document.getElementById('settingsBody');
   var curSec = parseInt(localStorage.getItem('wt_restSeconds')) || 90;
-  var h = '<div style="text-align:center;padding:20px 0 10px;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:1px;">我獨自升級 V1.0</div>';
+  var h = '<div style="text-align:center;padding:20px 0 10px;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:1px;">' + t('appTitle') + '</div>';
   h += '<div class="settings-section">';
-  h += '<h4>⏱️ 休息倒數秒數</h4>';
+  h += '<h4>' + t('setRestSec') + '</h4>';
   h += '<input type="number" class="settings-rest-input" id="restSecInput" value="' + curSec + '" min="5" step="5" autocomplete="off">';
-  h += '<div class="settings-rest-input-desc">輸入休息秒數（至少 5 秒）</div>';
+  h += '<div class="settings-rest-input-desc">' + t('setRestDesc') + '</div>';
   h += '</div>';
   h += '<div class="settings-section">';
-  h += '<h4>⚠️ 危險區域</h4>';
-  h += '<button class="btn-reset-data" id="resetDataBtn"><i class="fas fa-trash-alt"></i> 重設所有資料</button>';
-  h += '<div class="settings-rest-input-desc" style="margin-top:6px;">刪除所有範本、訓練紀錄、PR 排行榜資料，無法復原。</div>';
+  h += '<h4>' + t('setLang') + '</h4>';
+  h += '<select id="langSelect" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:16px;outline:none;appearance:auto;">';
+  h += '<option value="zh"' + (localStorage.getItem('wt_lang') === 'zh' ? ' selected' : '') + '>中文</option>';
+  h += '<option value="en"' + (localStorage.getItem('wt_lang') === 'en' ? ' selected' : '') + '>English</option>';
+  h += '</select>';
+  h += '</div>';
+  h += '<div class="settings-section">';
+  h += '<h4>' + t('setDanger') + '</h4>';
+  h += '<button class="btn-reset-data" id="resetDataBtn"><i class="fas fa-trash-alt"></i> ' + t('setResetBtn') + '</button>';
+  h += '<div class="settings-rest-input-desc" style="margin-top:6px;">' + t('setResetDesc') + '</div>';
   h += '</div>';
   body.innerHTML = h;
 }
@@ -520,27 +717,27 @@ async function renderTemplates() {
   var templates = DB.all('templates');
   var list = document.getElementById('tplList');
   if (!templates || templates.length === 0) {
-    list.innerHTML = '<div class="empty-state"><i class="fas fa-dumbbell"></i><p>還沒有訓練範本<br>點擊下方按鈕建立第一個 💪</p></div>' +
-        '<div style="text-align:center;padding:20px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> 新增範本</button></div>';
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-dumbbell"></i><p>' + t('emptyTpl') + '</p></div>' +
+        '<div style="text-align:center;padding:20px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> ' + t('emptyTplBtn') + '</button></div>';
     return;
   }
   var h = '<div class="tpl-grid">';
   templates.forEach(function(t) {
     h += '<div class="tpl-card" data-tpl="' + t.id + '">';
     h += '<div class="tpl-name">' + esc(t.name) + '</div>';
-    h += '<div class="tpl-meta"><span><i class="fas fa-dumbbell"></i>' + t.exercises.length + ' 動作</span></div>';
+    h += '<div class="tpl-meta"><span><i class="fas fa-dumbbell"></i>' + t.exercises.length + ' ' + t('tplActions') + '</span></div>';
     h += '<div class="tpl-ex-preview">';
     t.exercises.forEach(function(ex) {
       h += '<span class="tag">' + esc(ex.name) + '</span>';
     });
     h += '</div>';
     h += '<div class="tpl-actions">';
-    h += '<button class="btn-start tpl-start-btn" data-tpl="' + t.id + '"><i class="fas fa-play"></i> 開始訓練</button>';
-    h += '<button class="btn-secondary tpl-edit-btn" data-tpl="' + t.id + '"><i class="fas fa-pen"></i> 編輯</button>';
+    h += '<button class="btn-start tpl-start-btn" data-tpl="' + t.id + '"><i class="fas fa-play"></i> ' + t('tplStart') + '</button>';
+    h += '<button class="btn-secondary tpl-edit-btn" data-tpl="' + t.id + '"><i class="fas fa-pen"></i> ' + t('tplEditBtn') + '</button>';
     h += '</div></div>';
   });
   h += '</div>';
-  h += '<div style="text-align:center;padding:16px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> 新增範本</button></div>';
+  h += '<div style="text-align:center;padding:16px 0"><button class="btn-primary" id="tplNewBtn"><i class="fas fa-plus"></i> ' + t('emptyTplBtn') + '</button></div>';
   list.innerHTML = h;
 }
 
@@ -552,7 +749,7 @@ function showTplEditModal(tpl) {
 
   if (tpl) {
     editingTplId = tpl.id;
-    title.textContent = '✏️ 編輯範本';
+    title.textContent = '✏️ ' + t('tplEdit');
     nameInput.value = tpl.name;
     renderTplExRows(tpl.exercises);
     // show delete button
@@ -560,13 +757,13 @@ function showTplEditModal(tpl) {
       var delBtn = document.createElement('button');
       delBtn.id = 'tplModalDelete';
       delBtn.className = 'btn-danger';
-      delBtn.innerHTML = '<i class="fas fa-trash"></i> 刪除範本';
+      delBtn.innerHTML = '<i class="fas fa-trash"></i> ' + t('tplDelete');
       actions.appendChild(delBtn);
     }
     document.getElementById('tplModalDelete').style.display = 'inline-flex';
   } else {
     editingTplId = null;
-    title.textContent = '📋 新增範本';
+    title.textContent = '📋 ' + t('tplNew');
     nameInput.value = '';
     renderTplExRows([{ name: '', reps: 10, weight: 60 }]);
     var delBtn = document.getElementById('tplModalDelete');
@@ -582,9 +779,9 @@ function renderTplExRows(exercises) {
   exercises.forEach(function(ex, i) {
     h += '<div class="tpl-ex-row" data-ex-idx="' + i + '">';
     h += '<div class="ex-fields">';
-    h += '<input type="text" class="ex-name-input" value="' + esc(ex.name) + '" placeholder="動作名">';
-    h += '<input type="number" class="num-input ex-reps-input" value="' + (ex.reps || 10) + '" min="0" placeholder="次數">';
-    h += '<input type="number" class="num-input ex-weight-input" value="' + (ex.weight || 60) + '" step="0.5" min="0" placeholder="重量">';
+    h += '<input type="text" class="ex-name-input" value="' + esc(ex.name) + '" placeholder="">';
+    h += '<input type="number" class="num-input ex-reps-input" value="' + (ex.reps || 10) + '" min="0" placeholder="">';
+    h += '<input type="number" class="num-input ex-weight-input" value="' + (ex.weight || 60) + '" step="0.5" min="0" placeholder="">';
     h += '</div>';
     h += '<button class="ex-del" data-ex-idx="' + i + '"><i class="fas fa-times"></i></button>';
     h += '</div>';
@@ -632,7 +829,7 @@ function startSession(tpl) {
 
 function renderWorkout() {
   if (!currentSession) {
-    document.getElementById('wsBody').innerHTML = '<div class="empty-state"><i class="fas fa-play-circle"></i><p>請先選擇一個訓練範本開始 🏋️</p></div>';
+    document.getElementById('wsBody').innerHTML = '<div class="empty-state"><i class="fas fa-play-circle"></i><p>' + t('emptyWS') + '</p></div>';
     return;
   }
   document.getElementById('wsTitle').textContent = '🏋️ ' + currentSession.templateName;
@@ -661,10 +858,10 @@ h += '<div class="ex-actions"></div>';
       h += '<button class="set-del" data-ws-del="' + i + '-' + si + '"><i class="fas fa-trash-alt"></i></button>';
       h += '</div>';
     });
-    h += '<div class="add-set-btn" data-ws-add="' + i + '"><i class="fas fa-plus"></i> 新增組</div>';
+    h += '<div class="add-set-btn" data-ws-add="' + i + '"><i class="fas fa-plus"></i> ' + t('wsAddSet') + '</div>';
     h += '</div></div>';
   });
-  h += '<div class="empty-state" style="flex:none;padding:20px 0"><p>' + (allDone ? '✅ 所有動作已完成！點擊下方「完成訓練」儲存紀錄' : '點選方塊勾選完成的組 🎯') + '</p></div>';
+  h += '<div class="empty-state" style="flex:none;padding:20px 0"><p>' + (allDone ? t('wsAllDone') : t('wsInProgress')) + '</p></div>';
   body.innerHTML = h;
 }
 
@@ -718,7 +915,7 @@ async function finishWorkout() {
   stopSession();
   switchPage('history');
   renderHistory();
-  var msg = '✅ 訓練已完成！' + (prCount > 0 ? ' 🏆 新增 ' + prCount + ' 項 PR！' : '');
+  var msg = t('wsDone') + (prCount > 0 ? t('wsNewPR', {count: prCount}) : '');
   showToast(msg);
 }
 
@@ -733,7 +930,7 @@ function cancelWorkout() {
   stopSession();
   switchPage('templates');
   renderTemplates();
-  showToast('訓練已放棄');
+  showToast(t('wsCancelled'));
 }
 
 /* ===================================================================
@@ -807,18 +1004,18 @@ function restTimerClose() {
 async function renderHistory() {
   var workouts = DB.all('workouts');
   var list = document.getElementById('histList');
-  document.getElementById('histSub').textContent = workouts.length + ' 筆訓練記錄';
+  document.getElementById('histSub').textContent = workouts.length + ' ' + t('histCount');
   if (!workouts || workouts.length === 0) {
-    list.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>還沒有訓練記錄<br>完成訓練後就會出現在這裡 📜</p></div>';
+    list.innerHTML = '<div class="empty-state"><i class="fas fa-history"></i><p>' + t('emptyHist') + '</p></div>';
     return;
   }
   workouts.sort(function(a, b) { return new Date(b.date) - new Date(a.date); });
   var h = '<div class="stat-row">';
-  h += '<div class="stat-card"><div class="stat-val green">' + workouts.length + '</div><div class="stat-label">訓練次數</div></div>';
+  h += '<div class="stat-card"><div class="stat-val green">' + workouts.length + '</div><div class="stat-label">' + t('histSessions') + '</div></div>';
   var totalV = workouts.reduce(function(a, w) { return a + (w.totalVolume || 0); }, 0);
-  h += '<div class="stat-card"><div class="stat-val">' + totalV.toLocaleString() + '</div><div class="stat-label">總訓練量 (kg)</div></div>';
+  h += '<div class="stat-card"><div class="stat-val">' + totalV.toLocaleString() + '</div><div class="stat-label">' + t('histVolume') + '</div></div>';
   var totalSets = workouts.reduce(function(a, w) { return a + (w.completedSets || 0); }, 0);
-  h += '<div class="stat-card"><div class="stat-val">' + totalSets + '</div><div class="stat-label">完成組數</div></div>';
+  h += '<div class="stat-card"><div class="stat-val">' + totalSets + '</div><div class="stat-label">' + t('histSets') + '</div></div>';
   h += '</div>';
 
   workouts.forEach(function(w) {
@@ -837,7 +1034,7 @@ async function renderHistory() {
     h += '<span><i class="fas fa-tag"></i> ' + esc(w.templateName) + '</span>';
     h += '<span><i class="fas fa-clock"></i> ' + dur + '</span>';
     h += '<span><i class="fas fa-weight-hanging"></i> ' + (w.totalVolume || 0).toLocaleString() + ' kg</span>';
-    h += '<span><i class="fas fa-check-circle"></i> ' + (w.completedSets || 0) + ' 組</span>';
+    h += '<span><i class="fas fa-check-circle"></i> ' + (w.completedSets || 0) + ' ' + t('histSetsUnit') + '</span>';
     h += '</div>';
     h += '<div class="hist-ex-list">';
     (w.exercises || []).forEach(function(ex) {
@@ -933,9 +1130,9 @@ document.addEventListener('click', async function(e) {
     row.className = 'tpl-ex-row';
     row.dataset.exIdx = idx;
     row.innerHTML = '<div class="ex-fields">' +
-      '<input type="text" class="ex-name-input" placeholder="動作名">' +
-      '<input type="number" class="num-input ex-reps-input" value="10" min="0" placeholder="次數">' +
-      '<input type="number" class="num-input ex-weight-input" value="60" step="0.5" min="0" placeholder="重量">' +
+      '<input type="text" class="ex-name-input" placeholder="">' +
+      '<input type="number" class="num-input ex-reps-input" value="10" min="0" placeholder="">' +
+      '<input type="number" class="num-input ex-weight-input" value="60" step="0.5" min="0" placeholder="">' +
       '</div>' +
       '<button class="ex-del"><i class="fas fa-times"></i></button>';
     container.appendChild(row);
@@ -951,7 +1148,7 @@ document.addEventListener('click', async function(e) {
     var container = document.getElementById('tplExList');
     var rows = container.querySelectorAll('.tpl-ex-row');
     if (rows.length <= 1) {
-      showToast('至少需要一個運動項目');
+      showToast(t('tplNeedOneEx'));
       return;
     }
     row.remove();
@@ -967,15 +1164,13 @@ document.addEventListener('click', async function(e) {
   // ====== Template modal delete ======
   if (e.target.closest('#tplModalDelete')) {
     if (editingTplId === null) return;
-    showConfirm(
-      '🗑️ 刪除範本',
-      '確定要刪除這個範本嗎？此操作無法復原。',
+    showConfirm('🗑️ ' + t('tplDelete'), t('tplDeleteConfirm'),
       async function() {
         DB.remove('templates', editingTplId);
         document.getElementById('tplModal').classList.remove('show');
         editingTplId = null;
         renderTemplates();
-        showToast('🗑️ 範本已刪除');
+        showToast('🗑️ ' + t('tplDeleted'));
       }
     );
     return;
@@ -984,16 +1179,16 @@ document.addEventListener('click', async function(e) {
   // ====== Template modal save ======
   if (e.target.closest('#tplModalSave')) {
     var name = document.getElementById('tplNameInput').value.trim();
-    if (!name) { showToast('請輸入範本名稱'); return; }
+    if (!name) { showToast(t('tplNoName')); return; }
     var exercises = collectExFromRows();
-    if (exercises.length === 0) { showToast('請輸入至少一個運動項目'); return; }
+    if (exercises.length === 0) { showToast(t('tplNeedOneEx')); return; }
     var tpl = { name: name, exercises: exercises };
     if (editingTplId !== null) tpl.id = editingTplId;
     DB.put('templates', tpl);
     document.getElementById('tplModal').classList.remove('show');
     editingTplId = null;
     renderTemplates();
-    showToast('✅ 已儲存範本「' + name + '」');
+    showToast('✅ ' + t('tplSaved', {name: name}));
     return;
   }
 
@@ -1031,7 +1226,7 @@ document.addEventListener('click', async function(e) {
       currentSession.exercises[exIdx].sets.splice(setIdx, 1);
       renderWorkout();
     } else if (currentSession) {
-      showToast('至少需要保留一組');
+      showToast(t('wsNeedOneSet'));
     }
     return;
   }
@@ -1092,20 +1287,18 @@ document.addEventListener('click', async function(e) {
   var delHist = e.target.closest('[data-ws-del-hist]');
   if (delHist) {
     var wid = parseInt(delHist.dataset.wsDelHist);
-    showConfirm('🗑️ 刪除記錄', '確定要刪除此訓練記錄？', function() {
+    showConfirm('🗑️ ' + t('histDelete'), t('histDeleteConfirm'), function() {
       DB.remove('workouts', wid);
       recalcPR();
       renderHistory();
-      showToast('記錄已刪除');
+      showToast(t('histDeleted'));
     });
     return;
   }
 
   // ====== Settings: reset data ======
   if (e.target.closest('#resetDataBtn')) {
-    showConfirm(
-      '⚠️ 重設所有資料',
-      '確定要刪除所有範本、訓練紀錄和 PR 排行榜資料？此操作無法復原！',
+    showConfirm('⚠️ ' + t('resetTitle'), t('resetConfirm'),
       function() {
         DB._store = { templates: [], workouts: [], pr_records: [] };
         DB._autoId = { templates: 1, workouts: 1 };
@@ -1114,7 +1307,7 @@ document.addEventListener('click', async function(e) {
         renderHistory();
         renderPR();
         renderSettings();
-        showToast('🗑️ 所有資料已刪除');
+        showToast('🗑️ ' + t('resetDone'));
       }
     );
     return;
@@ -1191,6 +1384,15 @@ async function init() {
   }
   fixHeight();
   window.addEventListener('resize', fixHeight);
+
+  // ====== i18n — 語言切換 & 全域 data-i18n 套用 ======
+  applyI18n();
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'langSelect') {
+      localStorage.setItem('wt_lang', e.target.value);
+      init();
+    }
+  });
 }
 
 init();
