@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
-<title data-i18n="appTitle">我獨自升級 V1.0 💪</title>
+<title data-i18n="appTitle">我獨自升級 V2.0 💪</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
   :root {
@@ -132,12 +132,9 @@
   .pr-item .pr-rm .rm-unit { font-size:12px; color:var(--text3); }
 
   /* ===== Settings Page ===== */
-  .settings-section { margin-bottom:18px; }
-  .settings-section h4 { margin:0 0 10px; font-size:15px; color:var(--text); }
-  .settings-section label { font-size:11px; color:var(--text2); text-transform:uppercase; letter-spacing:1px; display:block; margin:8px 0 4px; }
-  .settings-rest-input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px 14px; color:var(--text); font-size:20px; font-weight:700; font-family:monospace; text-align:center; outline:none; }
-  .settings-rest-input:focus { border-color:var(--blue); }
-  .settings-rest-input-desc { font-size:12px; color:var(--text3); margin-top:4px; }
+  .rest-input { width:100%; background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:12px 14px; color:var(--text); font-size:20px; font-weight:700; font-family:monospace; text-align:center; outline:none; }
+  .rest-input:focus { border-color:var(--blue); }
+  .rest-desc { font-size:12px; color:var(--text3); margin-top:4px; }
   .btn-reset-data { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:var(--danger); border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; }
   .btn-reset-data:active { transform:scale(0.96); }
 
@@ -252,7 +249,6 @@
       </div>
       <div class="page-body" id="prList"></div>
     </div>
-  </div>
 
     <!-- ===== Settings Page ===== -->
     <div class="page" id="pageSettings">
@@ -263,6 +259,7 @@
       <div class="page-body" id="settingsBody"></div>
     </div>
   </div>
+</div>
 
 <!-- ===== Settings Page ===== -->
 <div class="modal-overlay" id="tplModal">
@@ -675,19 +672,19 @@ function renderSettings() {
   var curSec = parseInt(localStorage.getItem('wt_restSeconds')) || 90;
   var curHue = parseInt(localStorage.getItem('wt_hue')) || 142;
   var curBright = parseInt(localStorage.getItem('wt_brightness')) || 15;
-  var h = '<div style="text-align:center;padding:20px 0 10px;font-size:22px;font-weight:800;color:var(--accent);letter-spacing:1px;">' + t('appTitle') + '</div>';
-  // 配色控制區
-  h += '<div class="settings-section">';
-  h += '<h4>' + t('setTheme') + '</h4>';
-  h += '<label>' + t('setMainColor') + '</label>';
+  var h = '';
+
+  // Theme — 配色
+  h += '<h4 style="margin-bottom:12px;color:var(--text2);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' + t('setTheme') + '</h4>';
+  h += '<label style="display:block;font-size:14px;font-weight:600;margin:16px 0 6px;color:var(--text);">' + t('setMainColor') + '</label>';
   h += '<input type="color" id="huePicker" value="' + hslToHex(curHue, 65, 50) + '" style="width:100%;height:44px;border-radius:12px;border:1px solid var(--border);background:var(--bg);outline:none;cursor:pointer;padding:2px;">';
-  h += '<label style="margin-top:12px;">' + t('setBrightness') + '</label>';
+  h += '<label style="display:block;font-size:14px;font-weight:600;margin:16px 0 6px;color:var(--text);">' + t('setBrightness') + '</label>';
   h += '<div style="display:flex;align-items:center;gap:10px;">';
   h += '<span style="font-size:13px;color:var(--text3);">🌙</span>';
   h += '<input type="range" id="brightnessSlider" min="3" max="92" value="' + curBright + '" style="flex:1;height:6px;border-radius:3px;accent-color:var(--accent);">';
   h += '<span style="font-size:13px;color:var(--text3);">☀️</span>';
   h += '</div>';
-  h += '<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">';
+  h += '<div style="display:flex;gap:6px;margin-top:12px;flex-wrap:wrap;">';
   var presets = [
     {l: '🌿 Green', h: 142, b: 15},
     {l: '🔥 Red', h: 0, b: 15},
@@ -700,24 +697,33 @@ function renderSettings() {
     h += '<button class="btn-secondary preset-btn" data-hue="' + p.h + '" data-bright="' + p.b + '" style="flex:1;min-width:50px;font-size:11px;padding:6px 4px;justify-content:center;">' + p.l + '</button>';
   });
   h += '</div>';
-  h += '</div>';
-  h += '<div class="settings-section">';
-  h += '<h4>' + t('setRestSec') + '</h4>';
-  h += '<input type="number" class="settings-rest-input" id="restSecInput" value="' + curSec + '" min="5" step="5" autocomplete="off">';
-  h += '<div class="settings-rest-input-desc">' + t('setRestDesc') + '</div>';
-  h += '</div>';
-  h += '<div class="settings-section">';
-  h += '<h4>' + t('setLang') + '</h4>';
+
+  // Divider
+  h += '<hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">';
+
+  // Rest timer
+  h += '<h4 style="margin-bottom:12px;color:var(--text2);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' + t('setRestSec') + '</h4>';
+  h += '<input type="number" class="rest-input" id="restSecInput" value="' + curSec + '" min="5" step="5" autocomplete="off">';
+  h += '<div class="rest-desc">' + t('setRestDesc') + '</div>';
+
+  // Divider
+  h += '<hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">';
+
+  // Language
+  h += '<h4 style="margin-bottom:12px;color:var(--text2);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' + t('setLang') + '</h4>';
   h += '<select id="langSelect" style="width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:16px;outline:none;appearance:auto;">';
   h += '<option value="zh"' + (localStorage.getItem('wt_lang') === 'zh' ? ' selected' : '') + '>中文</option>';
   h += '<option value="en"' + (localStorage.getItem('wt_lang') === 'en' ? ' selected' : '') + '>English</option>';
   h += '</select>';
-  h += '</div>';
-  h += '<div class="settings-section">';
-  h += '<h4>' + t('setDanger') + '</h4>';
+
+  // Divider
+  h += '<hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">';
+
+  // Danger zone
+  h += '<h4 style="margin-bottom:12px;color:var(--danger);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">' + t('setDanger') + '</h4>';
   h += '<button class="btn-reset-data" id="resetDataBtn"><i class="fas fa-trash-alt"></i> ' + t('setResetBtn') + '</button>';
-  h += '<div class="settings-rest-input-desc" style="margin-top:6px;">' + t('setResetDesc') + '</div>';
-  h += '</div>';
+  h += '<div class="rest-desc" style="margin-top:6px;">' + t('setResetDesc') + '</div>';
+
   body.innerHTML = h;
 }
 
