@@ -137,6 +137,10 @@
   .rest-desc { font-size:12px; color:var(--text3); margin-top:4px; }
   .btn-reset-data { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3); color:var(--danger); border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; }
   .btn-reset-data:active { transform:scale(0.96); }
+  .btn-export { background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); color:var(--blue); border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; }
+  .btn-export:active { transform:scale(0.96); }
+  .btn-import { background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.3); color:var(--purple); border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:8px; width:100%; margin-top:8px; }
+  .btn-import:active { transform:scale(0.96); }
 
   /* ===== Modals ===== */
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); z-index:90; justify-content:center; align-items:center; }
@@ -403,7 +407,12 @@ var LANG = {
     navPR: '排行',
     navSet: '設定',
     navTrain: '訓練',
+    navData: '資料管理',
     editSetTitle: '✏️ 編輯組',
+    setExport: '📤 匯出資料',
+    setExportDesc: '將所有記錄匯出為 CSV 檔（^ 間隔）',
+    setImport: '📥 匯入資料',
+    setImportDesc: '從 CSV 檔匯入記錄（^ 間隔）',
     tplCancel: '取消',
     tplName: '範本名稱',
     wsFinish: '完成',
@@ -420,6 +429,7 @@ var LANG = {
 en: {
     appTitle: 'Solo Level Up V1.0',
     navTpl: 'Templates', navTrain: 'Workout', navHist: 'History', navPR: 'Leaderboard', navSet: 'Settings',
+    navData: 'Data Management',
     pageTpl: '📋 Templates', pageTplSub: 'Tap to edit, or press start',
     pageTrain: '🏋️ Workout',
     pageHist: '📜 History', pageHistSub: 'All workout history',
@@ -475,6 +485,10 @@ en: {
     setMainColor: 'Main Color',
     setBrightness: 'Brightness',
     setColorPresets: 'Presets',
+    setExport: '📤 Export Data',
+    setExportDesc: 'Export all records as CSV (^ delimiter)',
+    setImport: '📥 Import Data',
+    setImportDesc: 'Import records from CSV (^ delimiter)',
     confirmTitle: '⚠️ Confirm',
     confirmDelete: '🗑️ Delete',
     confirmDeleteMsg: 'Delete this workout record?',
@@ -715,6 +729,17 @@ function renderSettings() {
   h += '<option value="zh"' + (localStorage.getItem('wt_lang') === 'zh' ? ' selected' : '') + '>中文</option>';
   h += '<option value="en"' + (localStorage.getItem('wt_lang') === 'en' ? ' selected' : '') + '>English</option>';
   h += '</select>';
+
+  // Divider
+  h += '<hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">';
+
+  // Data — 匯出/匯入
+  h += '<h4 style="margin-bottom:12px;color:var(--text2);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;">📦 ' + t('navData') + '</h4>';
+  h += '<button class="btn-export" id="exportBtn"><i class="fas fa-file-export"></i> ' + t('setExport') + '</button>';
+  h += '<div class="rest-desc" style="margin-top:6px;">' + t('setExportDesc') + '</div>';
+  h += '<input type="file" id="importFileInput" accept=".csv" style="display:none">';
+  h += '<button class="btn-import" id="importBtn"><i class="fas fa-file-import"></i> ' + t('setImport') + '</button>';
+  h += '<div class="rest-desc" style="margin-top:6px;">' + t('setImportDesc') + '</div>';
 
   // Divider
   h += '<hr style="border:none;border-top:1px solid var(--border);margin:24px 0;">';
@@ -1346,6 +1371,25 @@ document.addEventListener('click', async function(e) {
     return;
   }
 
+  // ====== Settings: export data ======
+  if (e.target.closest('#exportBtn')) {
+    exportData();
+    return;
+  }
+
+  // ====== Settings: import data trigger ======
+  if (e.target.closest('#importBtn')) {
+    document.getElementById('importFileInput').click();
+    return;
+  }
+
+  // ====== Settings: handle file selection for import ======
+  var importInput = e.target.closest('#importFileInput');
+  if (importInput && importInput.files && importInput.files[0]) {
+    importDataFromFile(importInput.files[0], importInput);
+    return;
+  }
+
   // ====== Confirm modal ======
   if (e.target.closest('#confirmCancel')) {
     document.getElementById('confirmModal').classList.remove('show');
@@ -1454,6 +1498,109 @@ function applySkin(hue, brightness) {
   localStorage.setItem('wt_brightness', brightness);
 }
 
+function convertPoundToKg(wt, unit) {
+  if (unit === 'lbs') return +(wt * 0.453592).toFixed(1);
+  return wt;
+}
+
+/* ===================================================================
+   Import / Export
+   =================================================================== */
+
+function exportData() {
+  var records = DB.all('workouts') || [];
+  if (!records || records.length === 0) {
+    showToast('沒有資料可以匯出', 'warning');
+    return;
+  }
+
+  // Header
+  var lines = ['日期^時間^範本名稱^動作^組序^次數^重量(kg)'];
+
+  records.forEach(function(w) {
+    if (!w.exercises) return;
+    w.exercises.forEach(function(ex, ei) {
+      if (!ex.sets) return;
+      ex.sets.forEach(function(s, si) {
+        var date = w.date || '';
+        var time = w.time || '';
+        var tplName = (w.templateName || '').replace(/\^/g, ' ');
+        var exName = (ex.name || '').replace(/\^/g, ' ');
+        lines.push([date, time, tplName, exName, si + 1, s.reps || 0, s.weight || 0].join('^'));
+      });
+    });
+  });
+
+  var csv = lines.join('\n');
+  var blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'weight_tracker_export_' + new Date().toISOString().slice(0, 10) + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ 資料已匯出');
+}
+
+function importDataFromFile(file, inputEl) {
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = e.target.result;
+    var lines = text.split(/\r?\n/).filter(function(l) { return l.trim(); });
+    if (lines.length < 2) {
+      showToast('⚠️ CSV 檔案格式有誤或沒有資料', 'error');
+      inputEl.value = '';
+      return;
+    }
+
+    // Skip header (line 0)
+    var dataLines = lines.slice(1);
+    var imported = {};
+    var newWorkouts = [];
+
+    dataLines.forEach(function(line) {
+      var parts = line.split('^');
+      if (parts.length < 7) return;
+      var date = parts[0].trim();
+      var time = parts[1].trim();
+      var tplName = parts[2].trim();
+      var exName = parts[3].trim();
+      var setNum = parseInt(parts[4]) || 1;
+      var reps = parseInt(parts[5]) || 0;
+      var weight = parseFloat(parts[6]) || 0;
+
+      var key = date + '|' + time + '|' + tplName;
+      if (!imported[key]) {
+        imported[key] = { id: DB._autoId.workouts++, date: date, time: time, templateName: tplName, exercises: [] };
+        newWorkouts.push(imported[key]);
+      }
+      var w = imported[key];
+
+      // Find existing exercise or create
+      var ex = w.exercises.find(function(e) { return e.name === exName; });
+      if (!ex) {
+        ex = { name: exName, sets: [] };
+        w.exercises.push(ex);
+      }
+      ex.sets.push({ reps: reps, weight: weight });
+    });
+
+    // Append imported workouts
+    newWorkouts.forEach(function(w) {
+      DB.put('workouts', w);
+    });
+
+    recalcPR();
+    renderHistory();
+    renderPR();
+    inputEl.value = '';
+    showToast('✅ 已匯入 ' + newWorkouts.length + ' 筆訓練紀錄');
+  };
+  reader.readAsText(file);
+}
+
 /* ===================================================================
    Init
    =================================================================== */
@@ -1508,6 +1655,13 @@ async function init() {
       var bVal = parseInt(brightSlider.value);
       applySkin(parseInt(localStorage.getItem('wt_hue')) || 142, bVal);
       return;
+    }
+  });
+
+  // ====== Settings: handle file import change (delegated) ======
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'importFileInput' && e.target.files && e.target.files[0]) {
+      importDataFromFile(e.target.files[0], e.target);
     }
   });
 
